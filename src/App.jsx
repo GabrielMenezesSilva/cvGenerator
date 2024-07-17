@@ -3,10 +3,13 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Template1 from "./components/template1";
+import Template2 from "./components/template2";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import Form from "./components/formComponent";
+import FormTemplate1 from "./components/formTemplate1";
+import FormTemplate2 from "./components/formTemplate2";
 import { useState } from "react";
+import Dropdown from "react-bootstrap/Dropdown";
 
 function App() {
   const [person, setPerson] = useState({
@@ -35,6 +38,11 @@ function App() {
     languageSkills: "",
   });
 
+  const [template, setTemplate] = useState({
+    // define the structure of the template state here
+    templateName: "",
+  });
+
   return (
     <>
       <Navbar bg="primary" data-bs-theme="dark">
@@ -48,13 +56,26 @@ function App() {
         </Container>
       </Navbar>
 
+      <Dropdown>
+        <Dropdown.Toggle variant="success" id="dropdown-basic">
+          Sélectionner le modèle
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+          <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+          <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+
       <Container>
         <Row>
           <Col>
-            <Form person={person} setPerson={setPerson} />
+            <FormTemplate1 person={person} setPerson={setPerson} />
           </Col>
           <Col>
             <Template1 person={person} />
+            <Template2 /> {/*     aparecer somente quando selecionado      */}
           </Col>
         </Row>
       </Container>
