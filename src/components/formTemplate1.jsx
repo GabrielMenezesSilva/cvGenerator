@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
 function formComponent({ person, setPerson }) {
@@ -58,6 +58,36 @@ function formComponent({ person, setPerson }) {
   function changeLanguage(e) {
     setLanguage(e.target.value);
   }
+
+  const [listExp, setListExp] = useState([]);
+
+  function ajoutExp(e) {
+    e.preventDefault();
+    const exp = {
+      experience: person.experience,
+      adressEntreprise: person.adressEntreprise,
+      dateDebut: person.dateDebut,
+      dateFin: person.dateFin,
+      position: person.positionExp,
+      description: person.descriptionExp,
+    };
+    setListExp((prevList) => [...prevList, exp]);
+    setPerson({
+      ...person,
+      experience: "",
+      adressEntreprise: "",
+      dateDebut: "",
+      dateFin: "",
+      positionExp: "",
+      descriptionExp: "",
+    });
+  }
+
+  //TODO - Aprender oq é um UseEffect
+  useEffect(() => {
+    setPerson({ ...person, listExp: listExp });
+  }, [listExp]);
+
   return (
     <div>
       <form id="cv-form">
@@ -191,77 +221,7 @@ function formComponent({ person, setPerson }) {
           }}
         />
         <br />
-        {/**---------------------------------- EXPERIENCE 2 ----------------------------------*/}
-        <h3>Ajouter outres experiences</h3>
-        <br />
-        <label htmlFor="experience">Entreprise:</label>
-        <input
-          type="text"
-          id="experience"
-          name="experience"
-          value={person.experience2}
-          onChange={(e) => {
-            setPerson({ ...person, experience2: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Adress Entreprise:</label>
-        <input
-          type="text"
-          id="experience"
-          name="experience"
-          value={person.adressEntreprise2}
-          onChange={(e) => {
-            setPerson({ ...person, adressEntreprise2: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Date de début:</label>
-        <input
-          type="date"
-          id="experience"
-          name="experience"
-          value={person.dateDebut2}
-          onChange={(e) => {
-            setPerson({ ...person, dateDebut2: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Date de fin:</label>
-        <input
-          type="date"
-          id="experience"
-          name="experience"
-          value={person.dateFin2}
-          onChange={(e) => {
-            setPerson({ ...person, dateFin2: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Poste occupé:</label>
-        <input
-          type="text"
-          id="experience"
-          name="experience"
-          value={person.positionExp2}
-          onChange={(e) => {
-            setPerson({ ...person, positionExp2: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Description du Travail:</label>
-        <input
-          type="text"
-          id="experience"
-          name="experience"
-          value={person.descriptionExp2}
-          onChange={(e) => {
-            setPerson({ ...person, descriptionExp2: e.target.value });
-          }}
-        />
-        <br />
-
-        {/**---------------------------------- fin EXPERIENCE 2 ----------------------------------*/}
+        <button onClick={ajoutExp}>Ajouter plus experiences</button>
 
         {/*-----------------------------EDUCATION-------------------------- */}
 
@@ -319,7 +279,7 @@ function formComponent({ person, setPerson }) {
           value={person.technicalSkills}
           onChange={(e) => {
             setPerson({ ...person, technicalSkills: e.target.value });
-            }}
+          }}
         ></textarea>
         <br />
         {skills}
@@ -331,7 +291,7 @@ function formComponent({ person, setPerson }) {
           value={person.languageSkills}
           onChange={(e) => {
             setPerson({ ...person, languageSkills: e.target.value });
-            }}
+          }}
         ></textarea>
         <br />
 

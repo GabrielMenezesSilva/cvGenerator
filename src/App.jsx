@@ -10,6 +10,7 @@ import FormTemplate1 from "./components/formTemplate1";
 import FormTemplate2 from "./components/formTemplate2";
 import { useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
+import template1 from "./components/template1";
 
 function App() {
   const [person, setPerson] = useState({
@@ -36,12 +37,15 @@ function App() {
     diplomeFormation: "",
     technicalSkills: "",
     languageSkills: "",
+    listExp:[],
   });
 
-  const [template, setTemplate] = useState({
-    // define the structure of the template state here
-    templateName: "",
-  });
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  function handleSelect(e) {
+    console.log(e);
+    setSelectedItem(e);
+  }
 
   return (
     <>
@@ -56,26 +60,33 @@ function App() {
         </Container>
       </Navbar>
 
-      <Dropdown>
+      <Dropdown onSelect={handleSelect}>
         <Dropdown.Toggle variant="success" id="dropdown-basic">
-          Sélectionner le modèle
+          {selectedItem === null ? "Sélectionner le modèle" : selectedItem}
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-          <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+          <Dropdown.Item eventKey="Template 1">Template 1</Dropdown.Item>
+          <Dropdown.Item eventKey="Template 2">Template 2</Dropdown.Item>
+          <Dropdown.Item eventKey="Template 3">Something else</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
       <Container>
         <Row>
           <Col>
-            <FormTemplate1 person={person} setPerson={setPerson} />
+            {selectedItem === "Template 2" ? (
+              <FormTemplate2 person={person} setPerson={setPerson} />
+            ) : (
+              <FormTemplate1 person={person} setPerson={setPerson} />
+            )}
           </Col>
           <Col>
-            <Template1 person={person} />
-            <Template2 /> {/*     aparecer somente quando selecionado      */}
+            {selectedItem === "Template 2" ? (
+              <Template2 person={person} />
+            ) : (
+              <Template1 person={person} />
+            )}
           </Col>
         </Row>
       </Container>

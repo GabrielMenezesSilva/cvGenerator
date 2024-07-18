@@ -1,9 +1,11 @@
-import React from "react";
-import jsPDF from 'jspdf';
+import React, { useEffect } from "react";
+import jsPDF from "jspdf";
 
 const generatePdf = () => {
   const doc = new jsPDF();
-  const person = { /* dados do componente */ };
+  const person = {
+    /* dados do componente */
+  };
 
   // Adicione conteúdo ao PDF
   doc.text(10, 10, `Name: ${person.name}`);
@@ -12,16 +14,20 @@ const generatePdf = () => {
   // ...
 
   // Salve o PDF como um blob
-  const pdfBlob = doc.output('blob');
+  const pdfBlob = doc.output("blob");
 
   // Crie um link para download
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = URL.createObjectURL(pdfBlob);
-  link.download = 'resume.pdf';
+  link.download = "resume.pdf";
   link.click();
 };
 
 function template1({ person }) {
+  useEffect(() => {
+    console.log(person);
+  }, [person]);
+
   return (
     <div>
       <div className="container-template">
@@ -46,35 +52,27 @@ function template1({ person }) {
         <div className="details">
           <div className="section">
             <div className="section__title">Experience</div>
-            <div className="section__list">
-              <div className="section__list-item">
-                <div className="left">
-                  <div className="name">{person.experience}</div>
-                  <div className="addr">{person.adressEntreprise}</div>
-                  <div className="duration">
-                    {person.dateDebut}-{person.dateFin}
+            {person.listExp?.map((exp, index) => (
+              <div key={index} className="section__list">
+                <div className="section__list-item">
+                  <div className="left">
+                    <div className="name">{exp.experience}</div>
+                    <div className="addr">{exp.adressEntreprise}</div>
+                    <div className="duration">
+                      {exp.dateDebut}-{exp.dateFin}
+                    </div>
+                  </div>
+                  <div className="right">
+                    <div className="name">{exp.position}</div>
+                    <div className="desc">{exp.description}</div>
+                    <br />
                   </div>
                 </div>
-                <div className="right">
-                  <div className="name">{person.positionExp}</div>
-                  <div className="desc">{person.descriptionExp}</div>
-                </div>
               </div>
-              <div className="section__list-item">
-                <div className="left">
-                  <div className="name">{person.experience2}</div>
-                  <div className="addr">{person.adressEntreprise2}</div>
-                  <div className="duration">
-                    {person.dateDebut2}-{person.dateFin2}
-                  </div>
-                </div>
-                <div className="right">
-                  <div className="name">{person.positionExp2}</div>
-                  <div className="desc">{person.descriptionExp2}</div>
-                </div>
-              </div>
-            </div>
+            ))}
+            <br />
           </div>
+          {/*----------------------- fim da exp -----------------*/}
           {/*-----------------------------EDUCATION-------------------------- */}
 
           <div className="section">
@@ -106,30 +104,6 @@ function template1({ person }) {
             </div>
           </div>
           {/*-----------------------------FIM EDUCATION-------------------------- */}
-          {/* <div className="section">
-          <div className="section__title">Projects</div>
-          <div className="section__list">
-            <div className="section__list-item">
-              <div className="name">DSP</div>
-              <div className="text">
-                I am a front-end developer with more than 3 years of experience
-                writing html, css, and js. I'm motivated, result-focused and
-                seeking a successful team-oriented company with opportunity to
-                grow.
-              </div>
-            </div>
-
-            <div className="section__list-item">
-              <div className="name">DSP</div>
-              <div className="text">
-                I am a front-end developer with more than 3 years of experience
-                writing html, css, and js. I'm motivated, result-focused and
-                seeking a successful team-oriented company with opportunity to
-                grow. <a href="/login">link</a>
-              </div>
-            </div>
-          </div>
-        </div> */}
           <div className="section">
             <div className="section__title">Skills</div>
             <div className="skills">
@@ -151,7 +125,13 @@ function template1({ person }) {
           </div>
         </div>
       </div>
-      <input id="DowPDF" type="button" value="Download PDF" onClick={generatePdf} />    </div>
+      <input
+        id="DowPDF"
+        type="button"
+        value="Download PDF"
+        onClick={generatePdf}
+      />{" "}
+    </div>
   );
 }
 
