@@ -82,6 +82,28 @@ function formComponent({ person, setPerson }) {
       descriptionExp: "",
     });
   }
+  const [listEdu, setListEdu] = useState([]);
+  function ajoutForm(e) {
+    e.preventDefault();
+    const form = {
+      formation: person.institutionFormation,
+      adressFormation:person.adressFormation,
+      graduationDateFormation: person.graduationDateFormation,
+      diplomeFormation:person.diplomeFormation,
+    }
+
+    setListEdu((prevList) => [...prevList, form]);
+    setPerson({
+      ...person,
+      institutionFormation: "",
+      adressFormation: "",
+      graduationDateFormation: "",
+      diplomeFormation: "",
+      });
+  }
+  useEffect(() => {
+    setPerson({...person, listEdu: listEdu})
+  }, [listEdu])
 
   //TODO - Aprender oq é um UseEffect
   useEffect(() => {
@@ -270,6 +292,8 @@ function formComponent({ person, setPerson }) {
           }}
         />
         <br />
+        <button onClick={ajoutForm}>Ajouter plus Formations</button>
+        <br />
         {/*-----------------------------FIM EDUCATION-------------------------- */}
         <h2>Skills</h2>
         <label htmlFor="technical-skills">Technical Skills:</label>
@@ -295,7 +319,6 @@ function formComponent({ person, setPerson }) {
         ></textarea>
         <br />
 
-        <input type="submit" value="Download PDF" />
       </form>
     </div>
   );

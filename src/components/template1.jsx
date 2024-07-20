@@ -1,36 +1,43 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import jsPDF from "jspdf";
-
-const generatePdf = () => {
-  const doc = new jsPDF();
-  const person = {
-    /* dados do componente */
-  };
-
-  // Adicione conteúdo ao PDF
-  doc.text(10, 10, `Name: ${person.name}`);
-  doc.text(10, 20, `Email: ${person.email}`);
-  doc.text(10, 30, `Phone: ${person.phone}`);
-  // ...
-
-  // Salve o PDF como um blob
-  const pdfBlob = doc.output("blob");
-
-  // Crie um link para download
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(pdfBlob);
-  link.download = "resume.pdf";
-  link.click();
-};
+import html2Canvas from "html2canvas";
 
 function template1({ person }) {
-  useEffect(() => {
-    console.log(person);
-  }, [person]);
+  const refPdf = useRef();
+
+  function exportPdf() {
+    if (!refPdf.current) return;
+    const pdf = new jsPDF("p", "pt", "a4");
+
+    const pageHeight = pdf.internal.pageSize.getHeight(); // Altura da página PDF em mm
+    const pageWidth = pdf.internal.pageSize.getWidth(); // Largura da página PDF em mm
+    const inputHeight = refPdf.current.scrollHeight; // Altura da div
+    const inputWidth = refPdf.current.scrollWidth; // Largura da div
+
+    // Número total de páginas necessárias
+    const totalPages = Math.ceil(inputHeight / pageHeight);
+
+    html2Canvas(refPdf.current, { scrollY: -window.scrollY }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        let heightLeft = inputHeight;
+        let position = 0;
+
+        for (let i = 0; i < totalPages; i++) {
+            pdf.addImage(imgData, 'PNG', 0, position, pageWidth, inputHeight * (pageWidth / inputWidth));
+            heightLeft -= pageHeight;
+            position -= pageHeight;
+            if (heightLeft > 0) {
+                pdf.addPage();
+            }
+        }
+
+        pdf.save('download.pdf');
+    });
+  }
 
   return (
     <div>
-      <div className="container-template">
+      <div ref={refPdf} className="container-template">
         <div className="header">
           <div className="full-name">
             <span className="first-name">{person.name}</span>
@@ -67,7 +74,9 @@ function template1({ person }) {
                     <div className="desc">{exp.description}</div>
                     <br />
                   </div>
+                  <br />
                 </div>
+                <br />
               </div>
             ))}
             <br />
@@ -77,32 +86,24 @@ function template1({ person }) {
 
           <div className="section">
             <div className="section__title">Education</div>
-            <div className="section__list">
-              <div className="section__list-item">
-                <div className="left">
-                  <div className="name">{person.institutionFormation}</div>
-                  <div className="addr">{person.adressFormation}</div>
-                  <div className="duration">
-                    {person.graduationDateFormation}
+            {person.listEdu?.map((edu, index) => (
+              <div key={index} className="section__list">
+                <div className="section__list-item">
+                  <div className="left">
+                    <div className="name">{edu.institutionFormation}</div>
+                    <div className="addr">{edu.adressFormation}</div>
+                    <div className="duration">
+                      {edu.graduationDateFormation}
+                    </div>
+                  </div>
+                  <div className="right">
+                    <div className="name">{edu.diplomeFormation}</div>
                   </div>
                 </div>
-                <div className="right">
-                  <div className="name">{person.diplomeFormation}</div>
-                </div>
               </div>
-              <div className="section__list-item">
-                <div className="left">
-                  <div className="name">Akount</div>
-                  <div className="addr">San Monica, CA</div>
-                  <div className="duration">Jan 2011 - Feb 2015</div>
-                </div>
-                <div className="right">
-                  <div className="name">Fr developer</div>
-                  <div className="desc">did This and that</div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
+          <br />
           {/*-----------------------------FIM EDUCATION-------------------------- */}
           <div className="section">
             <div className="section__title">Skills</div>
@@ -129,8 +130,8 @@ function template1({ person }) {
         id="DowPDF"
         type="button"
         value="Download PDF"
-        onClick={generatePdf}
-      />{" "}
+        onClick={exportPdf}
+      />
     </div>
   );
 }
