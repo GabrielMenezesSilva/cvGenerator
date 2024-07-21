@@ -1,23 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import "./login.css";
 
 function Login() {
-  const switchers = [...document.querySelectorAll(".switcher")];
+  const [activeForm, setActiveForm] = useState('login');
 
-  switchers.forEach((item) => {
-    item.addEventListener("click", function () {
-      switchers.forEach((item) =>
-        item.parentElement.classList.remove("is-active")
-      );
-      this.parentElement.classList.add("is-active");
+  useEffect(() => {
+    const switchers = document.querySelectorAll('.switcher');
+    switchers.forEach((item) => {
+      item.addEventListener('click', (event) => {
+        const formType = event.target.classList.contains('switcher-login') ? 'login' : 'signup';
+        setActiveForm(formType);
+      });
     });
-  });
+    return () => {
+      switchers.forEach((item) => {
+        item.removeEventListener('click', () => {});
+      });
+    };
+  }, []);
+
   return (
     <div className="forms">
-      <div className="form-wrapper is-active">
+      <div className={`form-wrapper ${activeForm === 'login' ? 'is-active' : ''}`}>
         <button type="button" className="switcher switcher-login">
           Login
-          <span className="underline"></span>
+          <span className="underline">cvGenerator</span>
         </button>
         <form className="form form-login">
           <fieldset>
@@ -36,7 +43,7 @@ function Login() {
           </button>
         </form>
       </div>
-      <div className="form-wrapper">
+      <div className={`form-wrapper ${activeForm === 'signup' ? 'is-active' : ''}`}>
         <button type="button" className="switcher switcher-signup">
           Sign Up
           <span className="underline"></span>

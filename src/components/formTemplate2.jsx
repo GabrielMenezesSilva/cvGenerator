@@ -66,16 +66,48 @@ function formTemplate2({ person, setPerson }) {
         <h2>ABOUT ME</h2>
 
         <label forhtml="photo">Profile Photo:</label>
-        <input type="file" id="photo" name="photo" accept="image/jpeg" />
+        <input
+          type="file"
+          id="photo"
+          name="photo"
+          accept="image/jpeg"
+          value={person.photo2}
+          onChange={(e) => {
+            setPerson({ ...person, photo2: e.target.value });
+          }}
+        />
+
         <br />
         <label htmlFor="name">Name:</label>
         <input
           type="text"
           id="name"
           name="name"
-          value={person.name}
+          value={person.name2}
           onChange={(e) => {
-            setPerson({ ...person, name: e.target.value });
+            setPerson({ ...person, name2: e.target.value });
+          }}
+        />
+        <br />
+        <label htmlFor="adress">Adress:</label>
+        <input
+          type="text"
+          id="adress"
+          name="adress"
+          value={person.adress2}
+          onChange={(e) => {
+            setPerson({ ...person, adress2: e.target.value });
+          }}
+        />
+        <br />
+        <label htmlFor="phone">Phone:</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          value={person.phone2}
+          onChange={(e) => {
+            setPerson({ ...person, phone2: e.target.value });
           }}
         />
         <br />
@@ -84,22 +116,9 @@ function formTemplate2({ person, setPerson }) {
           type="email"
           id="email"
           name="email"
-          value={person.email}
+          value={person.email2}
           onChange={(e) => {
-            setPerson({ ...person, email: e.target.value });
-          }}
-        />
-        <br />
-
-        <br />
-        <label htmlFor="phone">Phone:</label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          value={person.phone}
-          onChange={(e) => {
-            setPerson({ ...person, phone: e.target.value });
+            setPerson({ ...person, email2: e.target.value });
           }}
         />
         <br />
@@ -108,9 +127,9 @@ function formTemplate2({ person, setPerson }) {
           type="text"
           id="position"
           name="position"
-          value={person.position}
+          value={person.position2}
           onChange={(e) => {
-            setPerson({ ...person, position: e.target.value });
+            setPerson({ ...person, position2: e.target.value });
           }}
         />
         <br />
@@ -119,9 +138,9 @@ function formTemplate2({ person, setPerson }) {
           type="text"
           id="description"
           name="description"
-          value={person.description}
+          value={person.description2}
           onChange={(e) => {
-            setPerson({ ...person, description: e.target.value });
+            setPerson({ ...person, description2: e.target.value });
           }}
         />
         {/**---------------------------------- EXPERIENCE ----------------------------------*/}
@@ -129,14 +148,25 @@ function formTemplate2({ person, setPerson }) {
         <h2>Expérience</h2>
         {/**---------------------------------- EXPERIENCE 1 ----------------------------------*/}
 
+        <label htmlFor="experience">Poste occupé:</label>
+        <input
+          type="text"
+          id="experience"
+          name="experience"
+          value={person.positionExp2}
+          onChange={(e) => {
+            setPerson({ ...person, positionExp2: e.target.value });
+          }}
+        />
+        <br />
         <label htmlFor="experience">Entreprise:</label>
         <input
           type="text"
           id="experience"
           name="experience"
-          value={person.experience}
+          value={person.experience2}
           onChange={(e) => {
-            setPerson({ ...person, experience: e.target.value });
+            setPerson({ ...person, experience2: e.target.value });
           }}
         />
         <br />
@@ -145,9 +175,9 @@ function formTemplate2({ person, setPerson }) {
           type="text"
           id="experience"
           name="experience"
-          value={person.adressEntreprise}
+          value={person.adressEntreprise2}
           onChange={(e) => {
-            setPerson({ ...person, adressEntreprise: e.target.value });
+            setPerson({ ...person, adressEntreprise2: e.target.value });
           }}
         />
         <br />
@@ -156,9 +186,9 @@ function formTemplate2({ person, setPerson }) {
           type="date"
           id="experience"
           name="experience"
-          value={person.dateDebut}
+          value={person.dateDebut2}
           onChange={(e) => {
-            setPerson({ ...person, dateDebut: e.target.value });
+            setPerson({ ...person, dateDebut2: e.target.value });
           }}
         />
         <br />
@@ -167,20 +197,9 @@ function formTemplate2({ person, setPerson }) {
           type="date"
           id="experience"
           name="experience"
-          value={person.dateFin}
+          value={person.dateFin2}
           onChange={(e) => {
-            setPerson({ ...person, dateFin: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Poste occupé:</label>
-        <input
-          type="text"
-          id="experience"
-          name="experience"
-          value={person.positionExp}
-          onChange={(e) => {
-            setPerson({ ...person, positionExp: e.target.value });
+            setPerson({ ...person, dateFin2: e.target.value });
           }}
         />
         <br />
@@ -189,9 +208,9 @@ function formTemplate2({ person, setPerson }) {
           type="text"
           id="experience"
           name="experience"
-          value={person.descriptionExp}
+          value={person.descriptionExp2}
           onChange={(e) => {
-            setPerson({ ...person, descriptionExp: e.target.value });
+            setPerson({ ...person, descriptionExp2: e.target.value });
           }}
         />
         <br />

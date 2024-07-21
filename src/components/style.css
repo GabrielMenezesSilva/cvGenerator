@@ -259,6 +259,9 @@ body {
   padding: 0;
   background-color: #f5f5f5;
 }
+h2, h3 {
+  text-align: left;
+}
 
 .template2-container {
   margin-top: 0px;
@@ -318,10 +321,17 @@ body {
 .template2-school {
   margin-bottom: 10px;
 }
+.template2-job h4,
+p {
+  text-align: left;
+  margin-bottom: 5px;
+}
 
-.template2-ul {
+.template2-ul ul,
+li {
   list-style: none;
   padding: 0;
+  text-align: left;
 }
 
 .template2-ul li {

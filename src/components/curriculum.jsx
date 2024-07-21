@@ -1,5 +1,5 @@
 import "../App.css";
-import "./style.css"
+import "./style.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -25,20 +25,27 @@ function Curriculum() {
     dateFin: "",
     positionExp: "",
     descriptionExp: "",
-    experience2: "",
-    dateDebut2: "",
-    adressEntreprise2: "",
-    dateFin2: "",
-    positionExp2: "",
-    descriptionExp2: "",
     institutionFormation: "",
     adressFormation: "",
     graduationDateFormation: "",
     diplomeFormation: "",
     technicalSkills: "",
     languageSkills: "",
-    listExp:[],
-    listEdu:[],
+    listExp: [],
+    listEdu: [],
+    photo2:"",
+    name2: "",
+    adress2: "",
+    phone2: "",
+    email2: "",
+    position2: "",
+    description2: "",
+    positionExp2: "",
+    experience2: "",
+    adressEntreprise2:"",
+    dateDebut2:"",
+    dateFin2:"",
+    descriptionExp2:"",
   });
 
   const [selectedItem, setSelectedItem] = useState(null);
@@ -68,7 +75,7 @@ function Curriculum() {
         <Dropdown.Menu>
           <Dropdown.Item eventKey="Template 1">Template 1</Dropdown.Item>
           <Dropdown.Item eventKey="Template 2">Template 2</Dropdown.Item>
-          <Dropdown.Item eventKey="Template 3">Something else</Dropdown.Item>
+          <Dropdown.Item eventKey="Template 3">Template 3</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 

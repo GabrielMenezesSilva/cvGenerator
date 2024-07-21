@@ -8,26 +8,22 @@ function Template2({ person }) {
           <img src="./images/photo.jpeg" alt="Profile Photo" />
         </div>
         <div className="template2-contact-info">
-          <h1>Gabriel Menezes</h1>
+          <h1>{person.name2}</h1>
           <p>
-            10 Place du metral - 1226 Thonex | +41 78 3187609 |
-            mrgabrielmenezes@icloud.com
+            {person.adress2} | {person.phone2} | {person.email2}
           </p>
+        <h2>{person.position2}</h2>
+        <p>{person.description2}</p>
         </div>
       </header>
       <section className="template2-profile">
-        <h2>Developer Full Stack</h2>
-        <p>A highly motivated and experienced professional...</p>
       </section>
       <section className="template2-experience">
-        <h2>Experience</h2>
+        <h2>Experiences</h2>
         <div className="template2-job">
-          <h3>Job Title</h3>
-          <p>Company Name, City, Dates</p>
-          <ul>
-            <li>Responsibility or achievement 1</li>
-            <li>Responsibility or achievement 2</li>
-          </ul>
+          <h4>{person.positionExp2}</h4>
+          <p>{person.experience2}, {person.adressEntreprise2}, {person.dateDebut2} - {person.dateFin2}</p>
+          <p>{person.descriptionExp2}</p>
         </div>
       </section>
       <section className="template2-education">
