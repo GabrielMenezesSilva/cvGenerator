@@ -46,6 +46,14 @@ function Curriculum() {
     dateDebut2:"",
     dateFin2:"",
     descriptionExp2:"",
+    diplomeFormation2:"",
+    institutionFormation2:"",
+    adressFormation2:"",
+    graduationDateFormation2:"",
+    listExp2: [],
+    listEdu2: [],
+    technicalSkills2:"",
+    languageSkills2:"",
   });
 
   const [selectedItem, setSelectedItem] = useState(null);
@@ -75,7 +83,6 @@ function Curriculum() {
         <Dropdown.Menu>
           <Dropdown.Item eventKey="Template 1">Template 1</Dropdown.Item>
           <Dropdown.Item eventKey="Template 2">Template 2</Dropdown.Item>
-          <Dropdown.Item eventKey="Template 3">Template 3</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 

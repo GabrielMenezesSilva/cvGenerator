@@ -100,6 +100,7 @@ function template1({ person }) {
                     <div className="name">{edu.diplomeFormation}</div>
                   </div>
                 </div>
+                <br />
               </div>
             ))}
           </div>

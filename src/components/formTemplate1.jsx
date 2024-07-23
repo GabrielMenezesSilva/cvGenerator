@@ -86,7 +86,7 @@ function formComponent({ person, setPerson }) {
   function ajoutForm(e) {
     e.preventDefault();
     const form = {
-      formation: person.institutionFormation,
+      institutionFormation: person.institutionFormation,
       adressFormation:person.adressFormation,
       graduationDateFormation: person.graduationDateFormation,
       diplomeFormation:person.diplomeFormation,

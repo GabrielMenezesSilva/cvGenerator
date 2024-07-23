@@ -12,36 +12,57 @@ function Template2({ person }) {
           <p>
             {person.adress2} | {person.phone2} | {person.email2}
           </p>
-        <h2>{person.position2}</h2>
-        <p>{person.description2}</p>
+          <h2>{person.position2}</h2>
+          <p>{person.description2}</p>
         </div>
       </header>
-      <section className="template2-profile">
-      </section>
+      <section className="template2-profile"></section>
       <section className="template2-experience">
         <h2>Experiences</h2>
-        <div className="template2-job">
-          <h4>{person.positionExp2}</h4>
-          <p>{person.experience2}, {person.adressEntreprise2}, {person.dateDebut2} - {person.dateFin2}</p>
-          <p>{person.descriptionExp2}</p>
-        </div>
+        {person.listExp2?.map((exp, index) => (
+          <div key={index} className="template2-job">
+            <h4>{exp.positionExp2}</h4>
+            <p>
+              {exp.experience2}, {exp.adressEntreprise2}, {exp.dateDebut2} -{" "}
+              {exp.dateFin2}
+            </p>
+            <p>{exp.descriptionExp2}</p>
+          </div>
+        ))}
       </section>
       <section className="template2-education">
         <h2>Education</h2>
-        <div className="template2-school">
-          <h3>Degree</h3>
-          <p>School Name, City, Dates</p>
-        </div>
+        {person.listEdu2?.map((edu, index) => (
+          <div key={index} className="template2-school">
+            <h3>{edu.diplomeFormation2}</h3>
+            <p>
+              {edu.institutionFormation2}, {edu.adressFormation2},{" "}
+              {edu.graduationDateFormation2}{" "}
+            </p>
+          </div>
+        ))}
       </section>
       <section className="template2-skills">
         <h2>Skills</h2>
-        <ul>
-          <li>Skill 1</li>
-          <li>Skill 2</li>
-          <li>Skill 3</li>
-        </ul>
+        <div className="skills">
+          <div className="skills__item">
+            <div className="left">
+              <div className="name">{person.technicalSkills2}</div>
+            </div>
+            <div className="right"></div>
+          </div>
+        </div>{" "}
       </section>
+      <div className="section">
+        <div className="section__title">
+          <h2>Language Skills</h2>
+        </div>
+        <div className="section__list">
+          <div className="section__list-item">{person.languageSkills2}</div>
+        </div>
+      </div>
     </div>
   );
 }
+
 export default Template2;

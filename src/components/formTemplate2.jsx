@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function formTemplate2({ person, setPerson }) {
   const [name, setName] = useState("");
@@ -58,6 +57,60 @@ function formTemplate2({ person, setPerson }) {
   function changeLanguage(e) {
     setLanguage(e.target.value);
   }
+
+
+  const [listExp2, setListExp2] = useState([]);
+
+  function ajoutExp2(e) {
+    e.preventDefault();
+    const exp = {
+      experience2: person.experience2,
+      adressEntreprise2: person.adressEntreprise2,
+      dateDebut2: person.dateDebut2,
+      dateFin2: person.dateFin2,
+      positionExp2: person.positionExp2,
+      description2: person.descriptionExp2,
+    };
+    setListExp2((prevList2) => [...prevList2, exp]);
+    setPerson({
+      ...person,
+      experience2: "",
+      adressEntreprise2: "",
+      dateDebut2: "",
+      dateFin2: "",
+      positionExp2: "",
+      descriptionExp2: "",
+    });
+  }
+
+  const [listEdu2, setListEdu2] = useState([]);
+  function ajoutForm2(e) {
+    e.preventDefault();
+    const form = {
+      institutionFormation2: person.institutionFormation2,
+      adressFormation2: person.adressFormation2,
+      graduationDateFormation2: person.graduationDateFormation2,
+      diplomeFormation2: person.diplomeFormation2,
+    };
+
+    setListEdu2((prevList) => [...prevList, form]);
+    setPerson({
+      ...person,
+      institutionFormation2: "",
+      adressFormation2: "",
+      graduationDateFormation2: "",
+      diplomeFormation2: "",
+    });
+  }
+
+  useEffect(() => {
+    setPerson({ ...person, listExp2: listExp2 });
+  }, [listExp2]);
+
+  useEffect(() => {
+    setPerson({ ...person, listEdu2: listEdu2 });
+  }, [listEdu2]);
+
   return (
     <div>
       <form id="cv-form">
@@ -214,78 +267,8 @@ function formTemplate2({ person, setPerson }) {
           }}
         />
         <br />
-        {/**---------------------------------- EXPERIENCE 2 ----------------------------------*/}
-        <h3>Ajouter outres experiences</h3>
+        <button onClick={ajoutExp2}>Ajouter plus experiences</button>
         <br />
-        <label htmlFor="experience">Entreprise:</label>
-        <input
-          type="text"
-          id="experience"
-          name="experience"
-          value={person.experience2}
-          onChange={(e) => {
-            setPerson({ ...person, experience2: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Adress Entreprise:</label>
-        <input
-          type="text"
-          id="experience"
-          name="experience"
-          value={person.adressEntreprise2}
-          onChange={(e) => {
-            setPerson({ ...person, adressEntreprise2: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Date de début:</label>
-        <input
-          type="date"
-          id="experience"
-          name="experience"
-          value={person.dateDebut2}
-          onChange={(e) => {
-            setPerson({ ...person, dateDebut2: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Date de fin:</label>
-        <input
-          type="date"
-          id="experience"
-          name="experience"
-          value={person.dateFin2}
-          onChange={(e) => {
-            setPerson({ ...person, dateFin2: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Poste occupé:</label>
-        <input
-          type="text"
-          id="experience"
-          name="experience"
-          value={person.positionExp2}
-          onChange={(e) => {
-            setPerson({ ...person, positionExp2: e.target.value });
-          }}
-        />
-        <br />
-        <label htmlFor="experience">Description du Travail:</label>
-        <input
-          type="text"
-          id="experience"
-          name="experience"
-          value={person.descriptionExp2}
-          onChange={(e) => {
-            setPerson({ ...person, descriptionExp2: e.target.value });
-          }}
-        />
-        <br />
-
-        {/**---------------------------------- fin EXPERIENCE 2 ----------------------------------*/}
-
         {/*-----------------------------EDUCATION-------------------------- */}
 
         <h2>Formation</h2>
@@ -294,9 +277,9 @@ function formTemplate2({ person, setPerson }) {
           type="text"
           id="institution"
           name="institution"
-          value={person.institutionFormation}
+          value={person.institutionFormation2}
           onChange={(e) => {
-            setPerson({ ...person, institutionFormation: e.target.value });
+            setPerson({ ...person, institutionFormation2: e.target.value });
           }}
         />
         <br />
@@ -305,9 +288,9 @@ function formTemplate2({ person, setPerson }) {
           type="text"
           id="degree"
           name="degree"
-          value={person.adressFormation}
+          value={person.adressFormation2}
           onChange={(e) => {
-            setPerson({ ...person, adressFormation: e.target.value });
+            setPerson({ ...person, adressFormation2: e.target.value });
           }}
         />
         <br />
@@ -316,9 +299,9 @@ function formTemplate2({ person, setPerson }) {
           type="date"
           id="graduation-date"
           name="graduation-date"
-          value={person.graduationDateFormation}
+          value={person.graduationDateFormation2}
           onChange={(e) => {
-            setPerson({ ...person, graduationDateFormation: e.target.value });
+            setPerson({ ...person, graduationDateFormation2: e.target.value });
           }}
         />
         <br />
@@ -327,11 +310,12 @@ function formTemplate2({ person, setPerson }) {
           type="text"
           id="relevant-courses"
           name="relevant-courses"
-          value={person.diplomeFormation}
+          value={person.diplomeFormation2}
           onChange={(e) => {
-            setPerson({ ...person, diplomeFormation: e.target.value });
+            setPerson({ ...person, diplomeFormation2: e.target.value });
           }}
         />
+        <button onClick={ajoutForm2}>Ajouter plus Formations</button>
         <br />
         {/*-----------------------------FIM EDUCATION-------------------------- */}
         <h2>Skills</h2>
@@ -339,9 +323,9 @@ function formTemplate2({ person, setPerson }) {
         <textarea
           id="technical-skills"
           name="technical-skills"
-          value={person.technicalSkills}
+          value={person.technicalSkills2}
           onChange={(e) => {
-            setPerson({ ...person, technicalSkills: e.target.value });
+            setPerson({ ...person, technicalSkills2: e.target.value });
           }}
         ></textarea>
         <br />
@@ -351,9 +335,9 @@ function formTemplate2({ person, setPerson }) {
         <textarea
           id="language-skills"
           name="language-skills"
-          value={person.languageSkills}
+          value={person.languageSkills2}
           onChange={(e) => {
-            setPerson({ ...person, languageSkills: e.target.value });
+            setPerson({ ...person, languageSkills2: e.target.value });
           }}
         ></textarea>
         <br />
