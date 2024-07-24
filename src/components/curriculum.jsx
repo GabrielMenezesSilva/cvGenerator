@@ -11,6 +11,7 @@ import FormTemplate1 from "../components/formTemplate1";
 import FormTemplate2 from "../components/formTemplate2";
 import { useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
+import { useNavigate } from "react-router-dom";
 
 function Curriculum() {
   const [person, setPerson] = useState({
@@ -61,6 +62,11 @@ function Curriculum() {
   function handleSelect(e) {
     setSelectedItem(e);
   }
+  const navigate = useNavigate();
+  function logOut(){
+    localStorage.removeItem("userToken");
+    navigate("/login");
+  }
 
   return (
     <>
@@ -70,7 +76,7 @@ function Curriculum() {
           <Nav className="me-auto">
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#features">Lettre de Motivation</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
+            <Nav.Link onClick={logOut} >LogOut</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -90,7 +96,7 @@ function Curriculum() {
         <Row>
           <Col>
             {selectedItem === "Template 2" ? (
-              <FormTemplate2 person={person} setPerson={setPerson} />
+               <FormTemplate2 person={person} setPerson={setPerson} />
             ) : (
               <FormTemplate1 person={person} setPerson={setPerson} />
             )}
