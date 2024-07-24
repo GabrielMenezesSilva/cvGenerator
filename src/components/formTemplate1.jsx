@@ -115,7 +115,7 @@ function formComponent({ person, setPerson }) {
       <form id="cv-form">
         {/**---------------------------------- ABOUT ME----------------------------------*/}
 
-        <h2>ABOUT ME</h2>
+        <h2>About Me</h2>
         <label htmlFor="name">Name:</label>
         <input
           type="text"

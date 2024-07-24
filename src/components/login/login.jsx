@@ -1,27 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import "./login.css";
+import { GoogleAuthProvider, signInWithPopup} from "firebase/auth";
+import { auth } from "../../services/firebase";
 
 function Login() {
-  const [activeForm, setActiveForm] = useState('login');
+  const [activeForm, setActiveForm] = useState("login");
 
   useEffect(() => {
-    const switchers = document.querySelectorAll('.switcher');
+    const switchers = document.querySelectorAll(".switcher");
     switchers.forEach((item) => {
-      item.addEventListener('click', (event) => {
-        const formType = event.target.classList.contains('switcher-login') ? 'login' : 'signup';
+      item.addEventListener("click", (event) => {
+        const formType = event.target.classList.contains("switcher-login")
+          ? "login"
+          : "signup";
         setActiveForm(formType);
       });
     });
     return () => {
       switchers.forEach((item) => {
-        item.removeEventListener('click', () => {});
+        item.removeEventListener("click", () => {});
       });
     };
   }, []);
 
+  const [user, setUser] = useState(null);
+
+  function handleGoogleSignIn() {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        setUser(result.user);
+        console.log(result.user);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   return (
     <div className="forms">
-      <div className={`form-wrapper ${activeForm === 'login' ? 'is-active' : ''}`}>
+      <div
+        className={`form-wrapper ${activeForm === "login" ? "is-active" : ""}`}
+      >
         <button type="button" className="switcher switcher-login">
           Login
           <span className="underline">cvGenerator</span>
@@ -41,9 +60,18 @@ function Login() {
           <button type="submit" className="btn-login">
             Login
           </button>
+          <button
+            type="button"
+            className="btn-google"
+            onClick={handleGoogleSignIn}
+          >
+            Login Avec Google
+          </button>
         </form>
       </div>
-      <div className={`form-wrapper ${activeForm === 'signup' ? 'is-active' : ''}`}>
+      <div
+        className={`form-wrapper ${activeForm === "signup" ? "is-active" : ""}`}
+      >
         <button type="button" className="switcher switcher-signup">
           Sign Up
           <span className="underline"></span>
