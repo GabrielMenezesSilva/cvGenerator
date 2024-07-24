@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 
 function formComponent({ person, setPerson }) {
-  const [listExp, setListExp] = useState([]);
+  // Define o componente funcional formComponent que recebe 'person' e 'setPerson' como props
+  const [listExp, setListExp] = useState([]); // define que  listExp vai receber um Array de exp
 
   function ajoutExp(e) {
+    // adicionar uma nova experiência no array
     e.preventDefault();
     const exp = {
       experience: person.experience,
@@ -13,8 +15,9 @@ function formComponent({ person, setPerson }) {
       dateFin: person.dateFin,
       position: person.positionExp,
       description: person.descriptionExp,
-    };
+    }; // Atualiza a lista de experiências adicionando a nova experiência
     setListExp((prevList) => [...prevList, exp]);
+
     setPerson({
       ...person,
       experience: "",
@@ -23,17 +26,17 @@ function formComponent({ person, setPerson }) {
       dateFin: "",
       positionExp: "",
       descriptionExp: "",
-    });
+    }); // Reseta os campos de experiência no estado 'person'
   }
-  const [listEdu, setListEdu] = useState([]);
-  function ajoutForm(e) {
+  const [listEdu, setListEdu] = useState([]); // Define o estado 'listEdu' para armazenar uma lista de formações
+  function ajoutForm(e) { // adicionar uma nova formação à lista
     e.preventDefault();
     const form = {
       institutionFormation: person.institutionFormation,
-      adressFormation:person.adressFormation,
+      adressFormation: person.adressFormation,
       graduationDateFormation: person.graduationDateFormation,
-      diplomeFormation:person.diplomeFormation,
-    }
+      diplomeFormation: person.diplomeFormation,
+    }; // Atualiza a lista de formações adicionando a nova formação
 
     setListEdu((prevList) => [...prevList, form]);
     setPerson({
@@ -42,14 +45,14 @@ function formComponent({ person, setPerson }) {
       adressFormation: "",
       graduationDateFormation: "",
       diplomeFormation: "",
-      });
+    }); // Reseta os campos de formação no estado 'person'
   }
-  useEffect(() => {
-    setPerson({...person, listEdu: listEdu})
-  }, [listEdu])
+  useEffect(() => { // Atualiza a lista de formações no estado 'person' sempre que 'listEdu' mudar
+    setPerson({ ...person, listEdu: listEdu });
+  }, [listEdu]);
 
-  //TODO - Aprender oq é um UseEffect
-  useEffect(() => {
+  
+  useEffect(() => { // Pareil mais pour les experiences
     setPerson({ ...person, listExp: listExp });
   }, [listExp]);
 
@@ -57,7 +60,7 @@ function formComponent({ person, setPerson }) {
     <div>
       <form id="cv-form">
         {/**---------------------------------- ABOUT ME----------------------------------*/}
-        
+
         <h2>About Me</h2>
         <label htmlFor="name">Name:</label>
         <input
@@ -249,7 +252,7 @@ function formComponent({ person, setPerson }) {
           }}
         ></textarea>
         <br />
-      
+
         <br />
         <label htmlFor="language-skills">Language Skills:</label>
         <textarea
@@ -261,7 +264,6 @@ function formComponent({ person, setPerson }) {
           }}
         ></textarea>
         <br />
-
       </form>
     </div>
   );

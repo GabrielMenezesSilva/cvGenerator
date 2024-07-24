@@ -11,12 +11,13 @@ import GoogleButton from "react-google-button";
 import { toast } from "react-toastify";
 
 function Login({ onLoginSuccess }) {
+  // Define o componente Login, que recebe uma função de callback onLoginSuccess como prop
   const [activeForm, setActiveForm] = useState("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailRegister, setEmailRegister] = useState("");
-  const [passwordRegister, setPasswordRegister] = useState("");
-  const [passwordRegisterConfirm, setPasswordRegisterConfirm] = useState("");
+  const [email, setEmail] = useState(""); // Define o estado para o email do email (Login)
+  const [password, setPassword] = useState(""); // Define o estado para a senha (Login)
+  const [emailRegister, setEmailRegister] = useState(""); // Define o estado para o email  (registro)
+  const [passwordRegister, setPasswordRegister] = useState(""); // Define o estado para a senha (registro)
+  const [passwordRegisterConfirm, setPasswordRegisterConfirm] = useState(""); // Define o estado para a confirmação da senha no registro
 
   useEffect(() => {
     const switchers = document.querySelectorAll(".switcher");
@@ -36,69 +37,87 @@ function Login({ onLoginSuccess }) {
   }, []);
 
   function signinWithLogin(e) {
+    // Função para tratar o login com email e senha
     e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, email, password) // Tenta fazer login com email e senha usando Firebase
       .then((result) => {
-        onLoginSuccess(result.user);
-        toast.success("Usuário Logado Com Sucesso");
+        // Se bem sucedido
+        onLoginSuccess(result.user); // Chama a função de callback com o usuário logado
+        toast.success("Utilisateur connecté avec succès");
       })
       .catch((error) => {
+        // Se houver erro
         console.error(error);
         if (error.code === "auth/invalid-credential") {
-          toast.warn("Invalid Password");
+          // Trata erro de credencial inválida
+          toast.warn("Mot de passe invalide"); // afiche le msg
         } else if (error.code === "auth/invalid-email") {
-          toast.warn("Email inválido");
+          // ou Trata erro de email inválido
+          toast.warn("Adresse e-mail invalide"); // afiche le msg
         }
       });
   }
   function signinWithRegister(e) {
+    // Função para tratar o registro de novo usuário
     e.preventDefault();
     if (passwordRegister !== passwordRegisterConfirm) {
-      toast.warn("Senhas não conferem");
-      return;
+      // Verifica se as senhas coincidem
+      toast.warn("Les mots de passe ne correspondent pas"); // afiche le msg
+      return; // Sai da função se as senhas não coincidirem
     }
 
-    createUserWithEmailAndPassword(auth, emailRegister, passwordRegister)
+    createUserWithEmailAndPassword(auth, emailRegister, passwordRegister) // Tenta criar um novo usuário com email e senha usando Firebase
       .then((result) => {
-        onLoginSuccess(result.user);
-        toast.success("Usuário Cadastrado Com Sucesso");
+        // Se bem sucedido
+        onLoginSuccess(result.user); // Chama a função de callback com o usuário registrado
+        toast.success("Utilisateur enregistré avec succès"); // afiche le msg
       })
       .catch((error) => {
         console.error(error);
         if (error.code === "auth/email-already-in-use") {
-          toast.warn("Email já cadastrado");
+          // Trata erro de email já em uso
+          toast.warn("Adresse e-mail déjà utilisée"); // afiche le msg
         } else if (error.code === "auth/weak-password") {
-          toast.warn("Senha muito fraca");
+          // Trata erro de password fraco
+          toast.warn("Mot de passe trop faible"); // afiche le msg
         } else if (error.code === "auth/invalid-email") {
-          toast.warn("Email inválido");
+          // Trata erro de email inválido
+          toast.warn("Adresse e-mail invalide"); // mostra a mensagem
         }
       });
   }
 
   function handleEmail(event) {
-    setEmail(event.target.value);
+    // atualizar o estado do email do login
+    setEmail(event.target.value); // Atualiza o estado com o valor do input
   }
   function handlePassword(event) {
-    setPassword(event.target.value);
+    // ""
+    setPassword(event.target.value); // ""
   }
   function handleEmailRegister(event) {
-    setEmailRegister(event.target.value);
+    // ""
+    setEmailRegister(event.target.value); // ""
   }
   function handlePasswordRegister(event) {
-    setPasswordRegister(event.target.value);
+    // ""
+    setPasswordRegister(event.target.value); // ""
   }
   function handlePasswordRegisterConfirm(event) {
-    setPasswordRegisterConfirm(event.target.value);
+    // ""
+    setPasswordRegisterConfirm(event.target.value); // ""
   }
 
   function handleGoogleSignIn() {
+    // tratar o login com Google
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        onLoginSuccess(result.user);
+        // Se bem sucedido
+        onLoginSuccess(result.user); // Chama a função de callback com o usuário logado
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((error) => { // Se houver erro
+        console.error(error); 
       });
   }
   return (
@@ -107,12 +126,15 @@ function Login({ onLoginSuccess }) {
         className={`form-wrapper ${activeForm === "login" ? "is-active" : ""}`}
       >
         <button type="button" className="switcher switcher-login">
-          Login
+          Connexion
           <span className="underline">cvGenerator</span>
         </button>
         <form className="form form-login">
           <fieldset>
-            <legend>Please, enter your email and password for login.</legend>
+            <legend>
+              Veuillez entrer votre adresse e-mail et votre mot de passe pour
+              vous connecter.
+            </legend>
             <div className="input-block">
               <label htmlFor="login-email">E-mail</label>
               <input
@@ -124,7 +146,7 @@ function Login({ onLoginSuccess }) {
               />
             </div>
             <div className="input-block">
-              <label htmlFor="login-password">Password</label>
+              <label htmlFor="login-password">Mot de passe</label>
               <input
                 id="login-password"
                 type="password"
@@ -135,7 +157,7 @@ function Login({ onLoginSuccess }) {
             </div>
           </fieldset>
           <button type="submit" className="btn-login" onClick={signinWithLogin}>
-            Login
+            Connexion
           </button>
           <GoogleButton
             onClick={() => {
@@ -149,14 +171,14 @@ function Login({ onLoginSuccess }) {
         className={`form-wrapper ${activeForm === "signup" ? "is-active" : ""}`}
       >
         <button type="button" className="switcher switcher-signup">
-          Sign Up
+          S'inscrire
           <span className="underline"></span>
         </button>
         <form className="form form-signup">
           <fieldset>
             <legend>
-              Please, enter your email, password and password confirmation for
-              sign up.
+              Veuillez entrer votre adresse e-mail, mot de passe et confirmation
+              de mot de passe pour vous inscrire.
             </legend>
             <div className="input-block">
               <label htmlFor="signup-email">E-mail</label>
@@ -169,7 +191,7 @@ function Login({ onLoginSuccess }) {
               />
             </div>
             <div className="input-block">
-              <label htmlFor="signup-password">Password</label>
+              <label htmlFor="signup-password">Mot de passe</label>
               <input
                 id="signup-password"
                 type="password"
@@ -179,7 +201,9 @@ function Login({ onLoginSuccess }) {
               />
             </div>
             <div className="input-block">
-              <label htmlFor="signup-password-confirm">Confirm password</label>
+              <label htmlFor="signup-password-confirm">
+                Confirmer le mot de passe
+              </label>
               <input
                 id="signup-password-confirm"
                 type="password"

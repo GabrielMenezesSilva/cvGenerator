@@ -14,6 +14,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
 
 function Curriculum() {
+  // Define o estado 'person' com várias propriedades para armazenar informações do currículo
   const [person, setPerson] = useState({
     name: "",
     email: "",
@@ -34,7 +35,7 @@ function Curriculum() {
     languageSkills: "",
     listExp: [],
     listEdu: [],
-    photo2:"",
+    photo2: "",
     name2: "",
     adress2: "",
     phone2: "",
@@ -43,27 +44,28 @@ function Curriculum() {
     description2: "",
     positionExp2: "",
     experience2: "",
-    adressEntreprise2:"",
-    dateDebut2:"",
-    dateFin2:"",
-    descriptionExp2:"",
-    diplomeFormation2:"",
-    institutionFormation2:"",
-    adressFormation2:"",
-    graduationDateFormation2:"",
+    adressEntreprise2: "",
+    dateDebut2: "",
+    dateFin2: "",
+    descriptionExp2: "",
+    diplomeFormation2: "",
+    institutionFormation2: "",
+    adressFormation2: "",
+    graduationDateFormation2: "",
     listExp2: [],
     listEdu2: [],
-    technicalSkills2:"",
-    languageSkills2:"",
+    technicalSkills2: "",
+    languageSkills2: "",
   });
 
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null); // Define o estado 'selectedItem' para armazenar o item selecionado no dropdown
 
   function handleSelect(e) {
+    // Função para lidar com a seleção de um item no dropdown
     setSelectedItem(e);
   }
-  const navigate = useNavigate();
-  function logOut(){
+  const navigate = useNavigate(); // realizar logout removendo o token do usuário do localStorage e navegando para a página de login
+  function logOut() {
     localStorage.removeItem("userToken");
     navigate("/login");
   }
@@ -76,7 +78,7 @@ function Curriculum() {
           <Nav className="me-auto">
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#features">Lettre de Motivation</Nav.Link>
-            <Nav.Link onClick={logOut} >LogOut</Nav.Link>
+            <Nav.Link onClick={logOut}>LogOut</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -95,13 +97,15 @@ function Curriculum() {
       <Container>
         <Row>
           <Col>
+            {/* Renderiza o formulário de acordo com o template selecionado */}
             {selectedItem === "Template 2" ? (
-               <FormTemplate2 person={person} setPerson={setPerson} />
+              <FormTemplate2 person={person} setPerson={setPerson} />
             ) : (
               <FormTemplate1 person={person} setPerson={setPerson} />
             )}
           </Col>
           <Col>
+            {/* renderiza o template*/}
             {selectedItem === "Template 2" ? (
               <Template2 person={person} />
             ) : (

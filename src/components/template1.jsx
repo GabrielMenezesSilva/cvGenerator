@@ -59,7 +59,7 @@ function template1({ person }) {
         <div className="details">
           <div className="section">
             <div className="section__title">Experience</div>
-            {person.listExp?.map((exp, index) => (
+            {person.listExp?.map((exp, index) => (  // Mapeia a lista de experiências e as exibe 
               <div key={index} className="section__list">
                 <div className="section__list-item">
                   <div className="left">
