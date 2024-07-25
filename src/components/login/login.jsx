@@ -17,7 +17,7 @@ function Login({ onLoginSuccess }) {
   const [password, setPassword] = useState(""); // Define o estado para a senha (Login)
   const [emailRegister, setEmailRegister] = useState(""); // Define o estado para o email  (registro)
   const [passwordRegister, setPasswordRegister] = useState(""); // Define o estado para a senha (registro)
-  const [passwordRegisterConfirm, setPasswordRegisterConfirm] = useState(""); // Define o estado para a confirmação da senha no registro
+  const [passwordRegisterConfirm, setPasswordRegisterConfirm] = useState(""); // Define o estado para aconfirmação da senha no registro
 
   useEffect(() => {
     const switchers = document.querySelectorAll(".switcher");
@@ -115,9 +115,11 @@ function Login({ onLoginSuccess }) {
       .then((result) => {
         // Se bem sucedido
         onLoginSuccess(result.user); // Chama a função de callback com o usuário logado
+        toast.success("Utilisateur connecté avec succès");
       })
       .catch((error) => { // Se houver erro
         console.error(error); 
+        toast.warn("Erreur lors de la connexion");
       });
   }
   return (

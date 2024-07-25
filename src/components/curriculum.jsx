@@ -12,6 +12,8 @@ import FormTemplate2 from "../components/formTemplate2";
 import { useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 function Curriculum() {
   // Define o estado 'person' com várias propriedades para armazenar informações do currículo
@@ -68,6 +70,8 @@ function Curriculum() {
   function logOut() {
     localStorage.removeItem("userToken");
     navigate("/login");
+    toast.success("Utilisateur desconnecté avec succès");
+
   }
 
   return (
