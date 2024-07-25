@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Template2({ person }) {
+  const [profilePhoto, setProfilePhoto] = useState(null);
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    setPerson({ ...person, profilePhoto: file });
+  };
   return (
     <div className="template2-container">
       <header className="template2-header">
         <div className="template2-photo">
-          <img src="./images/photo.jpeg" alt="Profile Photo" />
+          <img
+            src={
+              person.profilePhoto
+                ? URL.createObjectURL(person.profilePhoto)
+                : ""
+            }
+            alt="Photo de Profil"
+          />
         </div>
         <div className="template2-contact-info">
           <h1>{person.name2}</h1>

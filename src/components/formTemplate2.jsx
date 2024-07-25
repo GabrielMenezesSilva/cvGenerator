@@ -58,7 +58,6 @@ function formTemplate2({ person, setPerson }) {
     setLanguage(e.target.value);
   }
 
-
   const [listExp2, setListExp2] = useState([]);
 
   function ajoutExp2(e) {
@@ -111,6 +110,13 @@ function formTemplate2({ person, setPerson }) {
     setPerson({ ...person, listEdu2: listEdu2 });
   }, [listEdu2]);
 
+  const [profilePhoto, setProfilePhoto] = useState(null);
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    setPerson({ ...person, profilePhoto: file });
+  };
+
   return (
     <div>
       <form id="cv-form">
@@ -124,10 +130,7 @@ function formTemplate2({ person, setPerson }) {
           id="photo"
           name="photo"
           accept="image/jpeg"
-          value={person.photo2}
-          onChange={(e) => {
-            setPerson({ ...person, photo2: e.target.value });
-          }}
+          onChange={handlePhotoChange}
         />
 
         <br />
