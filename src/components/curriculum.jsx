@@ -72,28 +72,33 @@ function Curriculum() {
 
   return (
     <>
-      <Navbar bg="primary" data-bs-theme="dark">
-        <Container>
-          <Navbar.Brand href="#home">cvGenerator</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#features">Lettre de Motivation</Nav.Link>
-            <Nav.Link onClick={logOut}>LogOut</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
 
-      <Dropdown onSelect={handleSelect}>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
+
+<Navbar style={{ backgroundColor: '#85937a', color: '#202e32', textDecoration: 'none',padding:'5px', borderRadius:"13px" , width: '100%' }} expand="lg" className="navbar-dark w-100 fluid">
+  <Navbar.Brand style={{padding:"8px"}}>cvGenerator</Navbar.Brand>
+  <Navbar.Toggle aria-controls="basic-navbar-nav" />
+  <Navbar.Collapse id="basic-navbar-nav">
+    <Nav className="me-auto">
+      {/* <Nav.Link href="#features">Lettre de Motivation</Nav.Link> */}
+      <span id="span-navBar">Ceci est juste un exemple, n'hésitez pas à apporter des modifications lorsque nécessaire !</span>
+    </Nav>
+    <Nav className="ms-auto">
+      <Dropdown onSelect={handleSelect} style={{marginBottom:"10px", display:"flex",
+        justifyContent:"center", alignItems:"center", width:"100%", marginTop:"20px"}}>
+        <Dropdown.Toggle variant="success" id="dropdown-basic" style={{textAlign:"center", backgroundColor:"#586c5c", marginBottom:"15px", alignItems:"center"}}>
           {selectedItem === null ? "Sélectionner le modèle" : selectedItem}
         </Dropdown.Toggle>
-
-        <Dropdown.Menu>
+        <Dropdown.Menu style={{textAlign:"center", backgroundColor:"#a9af90", display:"row", alignItems:"center",}}>
           <Dropdown.Item eventKey="Template 1">Template 1</Dropdown.Item>
           <Dropdown.Item eventKey="Template 2">Template 2</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-
+      <Nav.Link onClick={logOut} style={{color:"white", textTransform:"uppercase",
+        fontSize:"12px", fontWeight:"bold", backgroundColor:"#85937a", borderRadius:"13px"
+        }}>Déconnexion</Nav.Link>
+    </Nav>
+  </Navbar.Collapse>
+</Navbar>
       <Container>
         <Row>
           <Col>

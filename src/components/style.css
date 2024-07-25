@@ -19,6 +19,9 @@ body {
   height: 100%;
   z-index: -1;
 }
+.navbar-dark{
+  color: #000;
+}
 
 h2 {
   margin-top: 20px;
@@ -249,6 +252,27 @@ input[type="submit"]:hover {
   right: 0;
   margin-top: 7px;
 }
+
+#span-navBar{
+  color: red;
+  font-weight: bold;
+  font-size: 14px;
+  background-color: #202e32;
+  text-transform: uppercase;
+}
+
+/* .fas ,
+.fa-sign-out-alt{
+  font-size: 18px;
+  padding-right: 10px;
+  background-color:#a9af90 ;
+  border-color: #a9af90;
+  color: #202e32;
+  border-radius: 5px;
+  margin-left: 10px;
+  margin-top: 5px;
+
+} */
 
 /* -------template2*/
 
