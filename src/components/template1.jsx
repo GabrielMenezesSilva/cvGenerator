@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import jsPDF from "jspdf";
-import html2Canvas from "html2canvas";
 import Button from "react-bootstrap/Button";
+import generatePDF, { Resolution, Margin } from "react-to-pdf";
 
 function template1({ person }) {
   const refPdf = useRef();
@@ -18,48 +17,63 @@ function template1({ person }) {
       });
     }
   }, [isLoading]);
+  const dpi = 72;
+  const pageWidthMM = 210;
+  const pageHeightMM = 297;
 
-  function exportPdf() {
-    if (!refPdf.current) return;
-    const pdf = new jsPDF("p", "pt", "a4");
+  const pageWidthPx = (pageWidthMM * dpi) / 25.4;
+  const pageHeightPx = (pageHeightMM * dpi) / 25.4;
+
+  function newPdf() {
     setLoading(true);
-
-    const pageHeight = pdf.internal.pageSize.getHeight(); // Altura da página PDF em mm
-    const pageWidth = pdf.internal.pageSize.getWidth(); // Largura da página PDF em mm
-    const inputHeight = refPdf.current.scrollHeight; // Altura da div
-    const inputWidth = refPdf.current.scrollWidth; // Largura da div
-
-    // Número total de páginas necessárias
-    const totalPages = Math.ceil(inputHeight / pageHeight);
-
-    html2Canvas(refPdf.current, { scrollY: -window.scrollY }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      let heightLeft = inputHeight;
-      let position = 0;
-
-      for (let i = 0; i < totalPages; i++) {
-        pdf.addImage(
-          imgData,
-          "PNG",
-          0,
-          position,
-          pageWidth,
-          inputHeight * (pageWidth / inputWidth)
-        );
-        heightLeft -= pageHeight;
-        position -= pageHeight;
-        if (heightLeft > 0) {
-          pdf.addPage();
-        }
-      }
-
-      pdf.save("cvGenerate.pdf");
-    });
+    const options = {
+      // default is `save`
+      filename: "teste.pdf",
+      method: "open",
+      pageBreak: "always",
+      // default is Resolution.MEDIUM = 3, which should be enough, higher values
+      // increases the image quality but also the size of the PDF, so be careful
+      // using values higher than 10 when having multiple pages generated, it
+      // might cause the page to crash or hang.
+      resolution: Resolution.HIGH,
+      page: {
+        // margin is in MM, default is Margin.NONE = 0
+        margin: Margin.SMALL,
+        // default is 'A4'
+        format: "letter",
+        // default is 'portrait'
+        orientation: "portrait",
+        page: {
+          x: pageWidthPx / 2,
+          y: pageHeightPx / 2,
+        },
+      },
+      canvas: {
+        // default is 'image/jpeg' for better size performance
+        mimeType: "image/png",
+        qualityRatio: 10,
+      },
+      // Customize any value passed to the jsPDF instance and html2canvas
+      // function. You probably will not need this and things can break,
+      // so use with caution.
+      overrides: {
+        // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
+        pdf: {
+          compress: true,
+        },
+        // see https://html2canvas.hertzen.com/configuration for more options
+        canvas: {
+          useCORS: true,
+        },
+      },
+    };
+    generatePDF(refPdf, options);
+    setLoading(false);
   }
 
   return (
     <div>
-      <div ref={refPdf} className="container-template">
+      <div ref={refPdf} className="container-template section page-break">
         <div className="header">
           <div className="full-name">
             <span className="first-name">{person.name}</span>
@@ -157,12 +171,20 @@ function template1({ person }) {
       <Button
         variant="primary"
         disabled={isLoading}
-        onClick={!isLoading ? exportPdf : null}
-        style={{ marginTop: "20px", marginRight: "20px" }}
+        onClick={!isLoading ? newPdf : null}
+        style={{ marginTop: "20px", marginRight: "20px", }}
       >
         {isLoading ? "Loading…" : "Download PDF"}
       </Button>
-      <input type="button" value="Download Word" />
+      
+      <Button
+        variant="primary"
+        disabled={isLoading}
+        onClick={!isLoading ? newPdf : null}
+        style={{ marginTop: "20px", marginLeft: "20px", }}
+      >
+        {isLoading ? "Loading…" : "Download Word"}
+      </Button>
     </div>
   );
 }
