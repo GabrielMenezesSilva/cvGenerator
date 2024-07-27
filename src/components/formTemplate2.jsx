@@ -1,62 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 function formTemplate2({ person, setPerson }) {
-  const [name, setName] = useState("");
-  function changeName(e) {
-    setName(e.target.value);
-  }
-  const [email, setEmail] = useState("");
-  function changeEmail(e) {
-    setEmail(e.target.value);
-  }
-  const [phone, setPhone] = useState("");
-  function changePhone(e) {
-    setPhone(e.target.value);
-  }
-  const [address, setAddress] = useState("");
-  function changeAddress(e) {
-    setAddress(e.target.value);
-  }
-  const [degree, setDegree] = useState("");
-  function changeDegree(e) {
-    setDegree(e.target.value);
-  }
-  const [institution, setInstitution] = useState("");
-  function changeInstitution(e) {
-    setInstitution(e.target.value);
-  }
-  const [graduationDate, setGraduationDate] = useState("");
-  function changeGraduationDate(e) {
-    setGraduationDate(e.target.value);
-  }
-  const [courses, setCourses] = useState("");
-  function changeCourses(e) {
-    setCourses(e.target.value);
-  }
-  const [job, setJob] = useState("");
-  function changeJob(e) {
-    setJob(e.target.value);
-  }
-  const [company, setCompany] = useState("");
-  function changeCompany(e) {
-    setCompany(e.target.value);
-  }
-  const [employment, setEmployment] = useState("");
-  function changeEmployment(e) {
-    setEmployment(e.target.value);
-  }
-  const [description, setDescription] = useState("");
-  function changeDescription(e) {
-    setDescription(e.target.value);
-  }
-  const [skills, setSkills] = useState("");
-  function changeSkills(e) {
-    setSkills(e.target.value);
-  }
-  const [language, setLanguage] = useState("");
-  function changeLanguage(e) {
-    setLanguage(e.target.value);
-  }
 
   const [listExp2, setListExp2] = useState([]);
 
@@ -331,8 +275,6 @@ function formTemplate2({ person, setPerson }) {
             setPerson({ ...person, technicalSkills2: e.target.value });
           }}
         ></textarea>
-        <br />
-        {skills}
         <br />
         <label htmlFor="language-skills">Language Skills:</label>
         <textarea

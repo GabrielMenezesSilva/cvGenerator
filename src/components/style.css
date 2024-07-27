@@ -314,6 +314,8 @@ h3 {
 .template2-photo img {
   width: 100%;
   border-radius: 30px;
+  height: 140px;
+  object-fit: cover;
 }
 
 .template2-contact-info {

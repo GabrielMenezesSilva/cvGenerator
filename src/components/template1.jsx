@@ -1,13 +1,28 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import jsPDF from "jspdf";
 import html2Canvas from "html2canvas";
+import Button from "react-bootstrap/Button";
 
 function template1({ person }) {
   const refPdf = useRef();
 
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    function simulateNetworkRequest() {
+      return new Promise((resolve) => setTimeout(resolve, 2000));
+    }
+    if (isLoading) {
+      simulateNetworkRequest().then(() => {
+        setLoading(false);
+      });
+    }
+  }, [isLoading]);
+
   function exportPdf() {
     if (!refPdf.current) return;
     const pdf = new jsPDF("p", "pt", "a4");
+    setLoading(true);
 
     const pageHeight = pdf.internal.pageSize.getHeight(); // Altura da página PDF em mm
     const pageWidth = pdf.internal.pageSize.getWidth(); // Largura da página PDF em mm
@@ -18,20 +33,27 @@ function template1({ person }) {
     const totalPages = Math.ceil(inputHeight / pageHeight);
 
     html2Canvas(refPdf.current, { scrollY: -window.scrollY }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        let heightLeft = inputHeight;
-        let position = 0;
+      const imgData = canvas.toDataURL("image/png");
+      let heightLeft = inputHeight;
+      let position = 0;
 
-        for (let i = 0; i < totalPages; i++) {
-            pdf.addImage(imgData, 'PNG', 0, position, pageWidth, inputHeight * (pageWidth / inputWidth));
-            heightLeft -= pageHeight;
-            position -= pageHeight;
-            if (heightLeft > 0) {
-                pdf.addPage();
-            }
+      for (let i = 0; i < totalPages; i++) {
+        pdf.addImage(
+          imgData,
+          "PNG",
+          0,
+          position,
+          pageWidth,
+          inputHeight * (pageWidth / inputWidth)
+        );
+        heightLeft -= pageHeight;
+        position -= pageHeight;
+        if (heightLeft > 0) {
+          pdf.addPage();
         }
+      }
 
-        pdf.save('download.pdf');
+      pdf.save("cvGenerate.pdf");
     });
   }
 
@@ -59,26 +81,31 @@ function template1({ person }) {
         <div className="details">
           <div className="section">
             <div className="section__title">Experience</div>
-            {person.listExp?.map((exp, index) => (  // Mapeia a lista de experiências e as exibe 
-              <div key={index} className="section__list">
-                <div className="section__list-item">
-                  <div className="left">
-                    <div className="name">{exp.experience}</div>
-                    <div className="addr">{exp.adressEntreprise}</div>
-                    <div className="duration">
-                      {exp.dateDebut}-{exp.dateFin}
+            {person.listExp?.map(
+              (
+                exp,
+                index // Mapeia a lista de experiências e as exibe
+              ) => (
+                <div key={index} className="section__list">
+                  <div className="section__list-item">
+                    <div className="left">
+                      <div className="name">{exp.experience}</div>
+                      <div className="addr">{exp.adressEntreprise}</div>
+                      <div className="duration">
+                        {exp.dateDebut}-{exp.dateFin}
+                      </div>
                     </div>
-                  </div>
-                  <div className="right">
-                    <div className="name">{exp.position}</div>
-                    <div className="desc">{exp.description}</div>
+                    <div className="right">
+                      <div className="name">{exp.position}</div>
+                      <div className="desc">{exp.description}</div>
+                      <br />
+                    </div>
                     <br />
                   </div>
                   <br />
                 </div>
-                <br />
-              </div>
-            ))}
+              )
+            )}
             <br />
           </div>
           {/*----------------------- fim da exp -----------------*/}
@@ -127,12 +154,15 @@ function template1({ person }) {
           </div>
         </div>
       </div>
-      <input
-        id="DowPDF"
-        type="button"
-        value="Download PDF"
-        onClick={exportPdf}
-      />
+      <Button
+        variant="primary"
+        disabled={isLoading}
+        onClick={!isLoading ? exportPdf : null}
+        style={{ marginTop: "20px", marginRight: "20px" }}
+      >
+        {isLoading ? "Loading…" : "Download PDF"}
+      </Button>
+      <input type="button" value="Download Word" />
     </div>
   );
 }

@@ -18,7 +18,7 @@ function formComponent({ person, setPerson }) {
     }; // Atualiza a lista de experiências adicionando a nova experiência
     setListExp((prevList) => [...prevList, exp]);
 
-    setPerson({
+    setPerson({ // resetar os campos 
       ...person,
       experience: "",
       adressEntreprise: "",
@@ -26,7 +26,7 @@ function formComponent({ person, setPerson }) {
       dateFin: "",
       positionExp: "",
       descriptionExp: "",
-    }); // Reseta os campos de experiência no estado 'person'
+    });
   }
   const [listEdu, setListEdu] = useState([]); // Define o estado 'listEdu' para armazenar uma lista de formações
   function ajoutForm(e) { // adicionar uma nova formação à lista
@@ -45,7 +45,7 @@ function formComponent({ person, setPerson }) {
       adressFormation: "",
       graduationDateFormation: "",
       diplomeFormation: "",
-    }); // Reseta os campos de formação no estado 'person'
+    }); // Reseta os campos 
   }
   useEffect(() => { // Atualiza a lista de formações no estado 'person' sempre que 'listEdu' mudar
     setPerson({ ...person, listEdu: listEdu });
@@ -71,6 +71,7 @@ function formComponent({ person, setPerson }) {
           onChange={(e) => {
             setPerson({ ...person, name: e.target.value });
           }}
+          placeholder="Seu nome"
         />
         <br />
         <label htmlFor="email">Email:</label>
