@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import jsPDF from 'jspdf';
-
+import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { saveAs } from 'file-saver';
 
 function template1({ person }) {
   const contentRef = useRef();
@@ -25,22 +26,22 @@ function template1({ person }) {
       unit: 'pt', // unidade de medida (pt, mm, cm, in)
       format: 'a4' // tamanho do papel (a3, a4, a5, letter, legal)
     });
-  
+
     // Ajuste as margens para centralizar o conteúdo
     const margins = {
       bottom: 20,
       left: 20,
       right: 20
     };
-  
+
     // Obtenha o tamanho do conteúdo
     const contentWidth = contentRef.current.scrollWidth;
     const contentHeight = contentRef.current.scrollHeight;
-  
+
     // Calcule a posição centralizada do conteúdo
     const x = (doc.internal.pageSize.width - contentWidth) / 2 + margins.left;
     const y = 0;
-  
+
     // Gere o PDF com o conteúdo centralizado
     doc.html(contentRef.current, {
       callback: (doc) => {
@@ -52,6 +53,101 @@ function template1({ person }) {
       width: contentWidth,
     });
   };
+
+  const generateWord = async () => {
+    setLoading(true);
+    const doc = new Document({
+      sections: [
+        {
+          properties: {},
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: person.name,
+                  bold: true,
+                  size: 32,
+                }),
+                new TextRun({
+                  text: `\nEmail: ${person.email}`,
+                  size: 24,
+                }),
+                new TextRun({
+                  text: `\nPhone: ${person.phone}`,
+                  size: 24,
+                }),
+                new TextRun({
+                  text: `\nPosition: ${person.position}`,
+                  size: 24,
+                }),
+                new TextRun({
+                  text: `\nDescription: ${person.description}`,
+                  size: 24,
+                }),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "\nExperience",
+                  bold: true,
+                  size: 28,
+                }),
+                ...person.listExp.map(exp => new TextRun({
+                  text: `\n\n${exp.experience} at ${exp.adressEntreprise} (${exp.dateDebut} - ${exp.dateFin})\n${exp.position}\n${exp.description}`,
+                  size: 24,
+                })),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "\nEducation",
+                  bold: true,
+                  size: 28,
+                }),
+                ...person.listEdu.map(edu => new TextRun({
+                  text: `\n\n${edu.institutionFormation} at ${edu.adressFormation} (${edu.graduationDateFormation})\n${edu.diplomeFormation}`,
+                  size: 24,
+                })),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "\nSkills",
+                  bold: true,
+                  size: 28,
+                }),
+                new TextRun({
+                  text: `\n${person.technicalSkills}`,
+                  size: 24,
+                }),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "\nLanguage Skills",
+                  bold: true,
+                  size: 28,
+                }),
+                new TextRun({
+                  text: `\n${person.languageSkills}`,
+                  size: 24,
+                }),
+              ],
+            }),
+          ],
+        },
+      ],
+    });
+
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, "document.docx");
+    setLoading(false);
+  };
+
   return (
     <div>
       <div ref={contentRef} className="container-template section page-break">
@@ -153,7 +249,7 @@ function template1({ person }) {
         variant="primary"
         disabled={isLoading}
         onClick={!isLoading ? generatePDF : null}
-        style={{ marginTop: "20px", marginRight: "20px", }}
+        style={{ marginTop: "20px", marginRight: "20px" }}
       >
         {isLoading ? "Loading…" : "Download PDF"}
       </Button>
@@ -161,8 +257,8 @@ function template1({ person }) {
       <Button
         variant="primary"
         disabled={isLoading}
-        onClick={!isLoading ? generatePDF : null}
-        style={{ marginTop: "20px", marginLeft: "20px", }}
+        onClick={!isLoading ? generateWord : null}
+        style={{ marginTop: "20px", marginLeft: "20px" }}
       >
         {isLoading ? "Loading…" : "Download Word"}
       </Button>

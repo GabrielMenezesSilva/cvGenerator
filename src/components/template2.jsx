@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import jsPDF from 'jspdf';
-
+import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { saveAs } from 'file-saver';
 
 function Template2({ person }) {
   const contentRef2 = useRef();
@@ -30,22 +31,22 @@ function Template2({ person }) {
       unit: 'pt', // unidade de medida (pt, mm, cm, in)
       format: 'a4' // tamanho do papel (a3, a4, a5, letter, legal)
     });
-  
+
     // Ajuste as margens para centralizar o conteúdo
     const margins = {
       bottom: 20,
       left: 20,
       right: 20
     };
-  
+
     // Obtenha o tamanho do conteúdo
     const contentWidth = contentRef2.current.scrollWidth;
     const contentHeight = contentRef2.current.scrollHeight;
-  
+
     // Calcule a posição centralizada do conteúdo
     const x = (doc.internal.pageSize.width - contentWidth) / 2 + margins.left;
     const y = 0;
-  
+
     // Gere o PDF com o conteúdo centralizado
     doc.html(contentRef2.current, {
       callback: (doc) => {
@@ -56,6 +57,100 @@ function Template2({ person }) {
       // Ajuste a largura da janela para redimensionar o conteúdo
       width: contentWidth,
     });
+  };
+
+  const generateWord2 = async () => {
+    setLoading(true);
+    const doc = new Document({
+      sections: [
+        {
+          properties: {},
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: person.name2,
+                  bold: true,
+                  size: 32,
+                }),
+                new TextRun({
+                  text: `\nEmail: ${person.email2}`,
+                  size: 24,
+                }),
+                new TextRun({
+                  text: `\nPhone: ${person.phone2}`,
+                  size: 24,
+                }),
+                new TextRun({
+                  text: `\nPosition: ${person.position2}`,
+                  size: 24,
+                }),
+                new TextRun({
+                  text: `\nDescription: ${person.description2}`,
+                  size: 24,
+                }),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "\nExperience",
+                  bold: true,
+                  size: 28,
+                }),
+                ...person.listExp2.map(exp => new TextRun({
+                  text: `\n\n${exp.positionExp2} at ${exp.experience2}, ${exp.adressEntreprise2} (${exp.dateDebut2} - ${exp.dateFin2})\n${exp.descriptionExp2}`,
+                  size: 24,
+                })),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "\nEducation",
+                  bold: true,
+                  size: 28,
+                }),
+                ...person.listEdu2.map(edu => new TextRun({
+                  text: `\n\n${edu.diplomeFormation2} at ${edu.institutionFormation2}, ${edu.adressFormation2} (${edu.graduationDateFormation2})`,
+                  size: 24,
+                })),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "\nSkills",
+                  bold: true,
+                  size: 28,
+                }),
+                new TextRun({
+                  text: `\n${person.technicalSkills2}`,
+                  size: 24,
+                }),
+              ],
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "\nLanguage Skills",
+                  bold: true,
+                  size: 28,
+                }),
+                new TextRun({
+                  text: `\n${person.languageSkills2}`,
+                  size: 24,
+                }),
+              ],
+            }),
+          ],
+        },
+      ],
+    });
+
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, "document.docx");
+    setLoading(false);
   };
 
   return (
@@ -135,7 +230,15 @@ function Template2({ person }) {
       >
         {isLoading ? "Loading…" : "Download PDF"}
       </Button>
-
+      
+      <Button
+        variant="primary"
+        disabled={isLoading}
+        onClick={!isLoading ? generateWord2 : null}
+        style={{ marginTop: "20px", marginLeft: "20px", }}
+      >
+        {isLoading ? "Loading…" : "Download Word"}
+      </Button>
     </div>
   );
 }
