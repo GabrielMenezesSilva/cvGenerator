@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
-import generatePDF, { Resolution, Margin } from "react-to-pdf";
+import jsPDF from 'jspdf';
+
 
 function template1({ person }) {
-  const refPdf = useRef();
+  const contentRef = useRef();
 
   const [isLoading, setLoading] = useState(false);
 
@@ -17,63 +18,43 @@ function template1({ person }) {
       });
     }
   }, [isLoading]);
-  const dpi = 72;
-  const pageWidthMM = 210;
-  const pageHeightMM = 297;
 
-  const pageWidthPx = (pageWidthMM * dpi) / 25.4;
-  const pageHeightPx = (pageHeightMM * dpi) / 25.4;
-
-  function newPdf() {
-    setLoading(true);
-    const options = {
-      // default is `save`
-      filename: "teste.pdf",
-      method: "open",
-      pageBreak: "always",
-      // default is Resolution.MEDIUM = 3, which should be enough, higher values
-      // increases the image quality but also the size of the PDF, so be careful
-      // using values higher than 10 when having multiple pages generated, it
-      // might cause the page to crash or hang.
-      resolution: Resolution.HIGH,
-      page: {
-        // margin is in MM, default is Margin.NONE = 0
-        margin: Margin.SMALL,
-        // default is 'A4'
-        format: "letter",
-        // default is 'portrait'
-        orientation: "portrait",
-        page: {
-          x: pageWidthPx / 2,
-          y: pageHeightPx / 2,
-        },
-      },
-      canvas: {
-        // default is 'image/jpeg' for better size performance
-        mimeType: "image/png",
-        qualityRatio: 10,
-      },
-      // Customize any value passed to the jsPDF instance and html2canvas
-      // function. You probably will not need this and things can break,
-      // so use with caution.
-      overrides: {
-        // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
-        pdf: {
-          compress: true,
-        },
-        // see https://html2canvas.hertzen.com/configuration for more options
-        canvas: {
-          useCORS: true,
-        },
-      },
+  const generatePDF = () => {
+    const doc = new jsPDF({
+      orientation: 'p', // 'p' para retrato, 'l' para paisagem
+      unit: 'pt', // unidade de medida (pt, mm, cm, in)
+      format: 'a4' // tamanho do papel (a3, a4, a5, letter, legal)
+    });
+  
+    // Ajuste as margens para centralizar o conteúdo
+    const margins = {
+      bottom: 20,
+      left: 20,
+      right: 20
     };
-    generatePDF(refPdf, options);
-    setLoading(false);
-  }
-
+  
+    // Obtenha o tamanho do conteúdo
+    const contentWidth = contentRef.current.scrollWidth;
+    const contentHeight = contentRef.current.scrollHeight;
+  
+    // Calcule a posição centralizada do conteúdo
+    const x = (doc.internal.pageSize.width - contentWidth) / 2 + margins.left;
+    const y = 0;
+  
+    // Gere o PDF com o conteúdo centralizado
+    doc.html(contentRef.current, {
+      callback: (doc) => {
+        doc.save('document.pdf');
+      },
+      x: x,
+      y: y,
+      // Ajuste a largura da janela para redimensionar o conteúdo
+      width: contentWidth,
+    });
+  };
   return (
     <div>
-      <div ref={refPdf} className="container-template section page-break">
+      <div ref={contentRef} className="container-template section page-break">
         <div className="header">
           <div className="full-name">
             <span className="first-name">{person.name}</span>
@@ -171,7 +152,7 @@ function template1({ person }) {
       <Button
         variant="primary"
         disabled={isLoading}
-        onClick={!isLoading ? newPdf : null}
+        onClick={!isLoading ? generatePDF : null}
         style={{ marginTop: "20px", marginRight: "20px", }}
       >
         {isLoading ? "Loading…" : "Download PDF"}
@@ -180,7 +161,7 @@ function template1({ person }) {
       <Button
         variant="primary"
         disabled={isLoading}
-        onClick={!isLoading ? newPdf : null}
+        onClick={!isLoading ? generatePDF : null}
         style={{ marginTop: "20px", marginLeft: "20px", }}
       >
         {isLoading ? "Loading…" : "Download Word"}

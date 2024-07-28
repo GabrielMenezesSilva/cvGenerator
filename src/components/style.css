@@ -292,10 +292,9 @@ h3 {
   margin-top: 0px;
   max-width: 800px;
   margin: 55px auto;
-  padding: 20px;
+  padding: 20px 20px 20px 20px;
   background: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border: #000, solid 1px;
 }
 
 .template2-header {
