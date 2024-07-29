@@ -287,7 +287,6 @@ function formTemplate2({ person, setPerson }) {
         ></textarea>
         <br />
 
-        <input type="submit" value="Download PDF" />
       </form>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import jsPDF from 'jspdf';
-import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { Document, Packer, Paragraph, TextRun, ImageRun } from 'docx';
 import { saveAs } from 'file-saver';
 
 function Template2({ person }) {
@@ -22,128 +22,151 @@ function Template2({ person }) {
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
-    // setPerson({ ...person, profilePhoto: file }); // substitua por useState
+    setProfilePhoto(file);
   };
 
   const generatePDF2 = () => {
     const doc = new jsPDF({
-      orientation: 'p', // 'p' para retrato, 'l' para paisagem
-      unit: 'pt', // unidade de medida (pt, mm, cm, in)
-      format: 'a4' // tamanho do papel (a3, a4, a5, letter, legal)
+      orientation: 'p',
+      unit: 'pt',
+      format: 'a4'
     });
 
-    // Ajuste as margens para centralizar o conteúdo
     const margins = {
       bottom: 20,
       left: 20,
       right: 20
     };
 
-    // Obtenha o tamanho do conteúdo
     const contentWidth = contentRef2.current.scrollWidth;
     const contentHeight = contentRef2.current.scrollHeight;
 
-    // Calcule a posição centralizada do conteúdo
     const x = (doc.internal.pageSize.width - contentWidth) / 2 + margins.left;
     const y = 0;
 
-    // Gere o PDF com o conteúdo centralizado
     doc.html(contentRef2.current, {
       callback: (doc) => {
         doc.save('document.pdf');
       },
       x: x,
       y: y,
-      // Ajuste a largura da janela para redimensionar o conteúdo
       width: contentWidth,
     });
   };
 
   const generateWord2 = async () => {
     setLoading(true);
+
+    let imageBuffer = null;
+    if (profilePhoto) {
+      const response = await fetch(URL.createObjectURL(profilePhoto));
+      imageBuffer = await response.arrayBuffer();
+    }
+
+    const documentContent = [
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: person.name2,
+            bold: true,
+            size: 32,
+          }),
+          new TextRun({
+            text: `\nEmail: ${person.email2}`,
+            size: 24,
+          }),
+          new TextRun({
+            text: `\nPhone: ${person.phone2}`,
+            size: 24,
+          }),
+          new TextRun({
+            text: `\nPosition: ${person.position2}`,
+            size: 24,
+          }),
+          new TextRun({
+            text: `\nDescription: ${person.description2}`,
+            size: 24,
+          }),
+        ],
+      })
+    ];
+
+    if (imageBuffer) {
+      documentContent.unshift(
+        new Paragraph({
+          children: [
+            new ImageRun({
+              data: imageBuffer,
+              transformation: {
+                width: 100,
+                height: 100,
+              },
+            }),
+          ],
+        })
+      );
+    }
+
+    documentContent.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "\nExperience",
+            bold: true,
+            size: 28,
+          }),
+          ...person.listExp2.map(exp => new TextRun({
+            text: `\n\n${exp.positionExp2} at ${exp.experience2}, ${exp.adressEntreprise2} (${exp.dateDebut2} - ${exp.dateFin2})\n${exp.descriptionExp2}`,
+            size: 24,
+          })),
+        ],
+      }),
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "\nEducation",
+            bold: true,
+            size: 28,
+          }),
+          ...person.listEdu2.map(edu => new TextRun({
+            text: `\n\n${edu.diplomeFormation2} at ${edu.institutionFormation2}, ${edu.adressFormation2} (${edu.graduationDateFormation2})`,
+            size: 24,
+          })),
+        ],
+      }),
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "\nSkills",
+            bold: true,
+            size: 28,
+          }),
+          new TextRun({
+            text: `\n${person.technicalSkills2}`,
+            size: 24,
+          }),
+        ],
+      }),
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "\nLanguage Skills",
+            bold: true,
+            size: 28,
+          }),
+          new TextRun({
+            text: `\n${person.languageSkills2}`,
+            size: 24,
+          }),
+        ],
+      })
+    );
+
     const doc = new Document({
       sections: [
         {
           properties: {},
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: person.name2,
-                  bold: true,
-                  size: 32,
-                }),
-                new TextRun({
-                  text: `\nEmail: ${person.email2}`,
-                  size: 24,
-                }),
-                new TextRun({
-                  text: `\nPhone: ${person.phone2}`,
-                  size: 24,
-                }),
-                new TextRun({
-                  text: `\nPosition: ${person.position2}`,
-                  size: 24,
-                }),
-                new TextRun({
-                  text: `\nDescription: ${person.description2}`,
-                  size: 24,
-                }),
-              ],
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "\nExperience",
-                  bold: true,
-                  size: 28,
-                }),
-                ...person.listExp2.map(exp => new TextRun({
-                  text: `\n\n${exp.positionExp2} at ${exp.experience2}, ${exp.adressEntreprise2} (${exp.dateDebut2} - ${exp.dateFin2})\n${exp.descriptionExp2}`,
-                  size: 24,
-                })),
-              ],
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "\nEducation",
-                  bold: true,
-                  size: 28,
-                }),
-                ...person.listEdu2.map(edu => new TextRun({
-                  text: `\n\n${edu.diplomeFormation2} at ${edu.institutionFormation2}, ${edu.adressFormation2} (${edu.graduationDateFormation2})`,
-                  size: 24,
-                })),
-              ],
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "\nSkills",
-                  bold: true,
-                  size: 28,
-                }),
-                new TextRun({
-                  text: `\n${person.technicalSkills2}`,
-                  size: 24,
-                }),
-              ],
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "\nLanguage Skills",
-                  bold: true,
-                  size: 28,
-                }),
-                new TextRun({
-                  text: `\n${person.languageSkills2}`,
-                  size: 24,
-                }),
-              ],
-            }),
-          ],
+          children: documentContent,
         },
       ],
     });
@@ -230,7 +253,7 @@ function Template2({ person }) {
       >
         {isLoading ? "Loading…" : "Download PDF"}
       </Button>
-      
+
       <Button
         variant="primary"
         disabled={isLoading}
