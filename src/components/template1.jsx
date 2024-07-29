@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
-import jsPDF from 'jspdf';
-import { Document, Packer, Paragraph, TextRun } from 'docx';
-import { saveAs } from 'file-saver';
+import jsPDF from "jspdf";
+import { Document, Packer, Paragraph, TextRun } from "docx";
+import { saveAs } from "file-saver";
 
 function template1({ person }) {
   const contentRef = useRef();
@@ -22,16 +22,16 @@ function template1({ person }) {
 
   const generatePDF = () => {
     const doc = new jsPDF({
-      orientation: 'p', // 'p' para retrato, 'l' para paisagem
-      unit: 'pt', // unidade de medida (pt, mm, cm, in)
-      format: 'a4' // tamanho do papel (a3, a4, a5, letter, legal)
+      orientation: "p", // 'p' para retrato, 'l' para paisagem
+      unit: "pt", // unidade de medida (pt, mm, cm, in)
+      format: "a4", // tamanho do papel (a3, a4, a5, letter, legal)
     });
 
     // Ajuste as margens para centralizar o conteúdo
     const margins = {
       bottom: 20,
       left: 20,
-      right: 20
+      right: 20,
     };
 
     // Obtenha o tamanho do conteúdo
@@ -45,7 +45,7 @@ function template1({ person }) {
     // Gere o PDF com o conteúdo centralizado
     doc.html(contentRef.current, {
       callback: (doc) => {
-        doc.save('document.pdf');
+        doc.save("document.pdf");
       },
       x: x,
       y: y,
@@ -93,10 +93,13 @@ function template1({ person }) {
                   bold: true,
                   size: 28,
                 }),
-                ...person.listExp.map(exp => new TextRun({
-                  text: `\n\n${exp.experience} at ${exp.adressEntreprise} (${exp.dateDebut} - ${exp.dateFin})\n${exp.position}\n${exp.description}`,
-                  size: 24,
-                })),
+                ...person.listExp.map(
+                  (exp) =>
+                    new TextRun({
+                      text: `\n\n${exp.experience} at ${exp.adressEntreprise} (${exp.dateDebut} - ${exp.dateFin})\n${exp.position}\n${exp.description}`,
+                      size: 24,
+                    })
+                ),
               ],
             }),
             new Paragraph({
@@ -106,10 +109,13 @@ function template1({ person }) {
                   bold: true,
                   size: 28,
                 }),
-                ...person.listEdu.map(edu => new TextRun({
-                  text: `\n\n${edu.institutionFormation} at ${edu.adressFormation} (${edu.graduationDateFormation})\n${edu.diplomeFormation}`,
-                  size: 24,
-                })),
+                ...person.listEdu.map(
+                  (edu) =>
+                    new TextRun({
+                      text: `\n\n${edu.institutionFormation} at ${edu.adressFormation} (${edu.graduationDateFormation})\n${edu.diplomeFormation}`,
+                      size: 24,
+                    })
+                ),
               ],
             }),
             new Paragraph({
@@ -253,7 +259,7 @@ function template1({ person }) {
       >
         {isLoading ? "Loading…" : "Download PDF"}
       </Button>
-      
+
       <Button
         variant="primary"
         disabled={isLoading}

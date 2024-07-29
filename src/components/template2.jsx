@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import Button from "react-bootstrap/Button";
-import jsPDF from 'jspdf';
-import { Document, Packer, Paragraph, TextRun, ImageRun } from 'docx';
-import { saveAs } from 'file-saver';
+import jsPDF from "jspdf";
+import * as fs from "fs";
+import { Document, Packer, Paragraph, TextRun, ImageRun } from "docx";
+import { saveAs } from "file-saver";
 
 function Template2({ person }) {
   const contentRef2 = useRef();
@@ -11,7 +12,7 @@ function Template2({ person }) {
 
   useEffect(() => {
     function simulateNetworkRequest() {
-      return new Promise((resolve) => setTimeout(resolve, 2000));
+      return new Promise((resolve) => setTimeout(resolve, 2000)); // Button Loading Download
     }
     if (isLoading) {
       simulateNetworkRequest().then(() => {
@@ -27,15 +28,15 @@ function Template2({ person }) {
 
   const generatePDF2 = () => {
     const doc = new jsPDF({
-      orientation: 'p',
-      unit: 'pt',
-      format: 'a4'
+      orientation: "p",
+      unit: "pt",
+      format: "a4",
     });
 
     const margins = {
       bottom: 20,
       left: 20,
-      right: 20
+      right: 20,
     };
 
     const contentWidth = contentRef2.current.scrollWidth;
@@ -46,7 +47,7 @@ function Template2({ person }) {
 
     doc.html(contentRef2.current, {
       callback: (doc) => {
-        doc.save('document.pdf');
+        doc.save("document.pdf");
       },
       x: x,
       y: y,
@@ -56,12 +57,11 @@ function Template2({ person }) {
 
   const generateWord2 = async () => {
     setLoading(true);
-
-    let imageBuffer = null;
-    if (profilePhoto) {
-      const response = await fetch(URL.createObjectURL(profilePhoto));
-      imageBuffer = await response.arrayBuffer();
-    }
+    console.log(person.profilePhoto);
+    console.log(URL.createObjectURL(person.profilePhoto));
+    const response = await fetch(URL.createObjectURL(person.profilePhoto));
+    const buffer = await response.arrayBuffer();
+    console.log(buffer);
 
     const documentContent = [
       new Paragraph({
@@ -88,24 +88,54 @@ function Template2({ person }) {
             size: 24,
           }),
         ],
-      })
+      }),
     ];
 
-    if (imageBuffer) {
-      documentContent.unshift(
-        new Paragraph({
-          children: [
-            new ImageRun({
-              data: imageBuffer,
-              transformation: {
-                width: 100,
-                height: 100,
-              },
-            }),
-          ],
-        })
-      );
-    }
+    // let imageBuffer = null;
+    // // if (profilePhoto) {
+    // // }
+    // const FR = new FileReader();
+    // FR.addEventListener("load", async function (evt) {
+    //   imageBuffer = evt.target.result.split("base64,")[1];
+    //   console.log(imageBuffer);
+
+    //   documentContent.unshift(
+    //     new Paragraph({
+    //       children: [
+    //         new ImageRun({
+    //           data: Buffer.from(imageBuffer, "base64"),
+    //           transformation: {
+    //             width: 100,
+    //             height: 100,
+    //           },
+    //         }),
+    //       ],
+    //     })
+    //   );
+
+    //   const blob = await Packer.toBlob(doc);
+    //   saveAs(blob, "document.docx");
+    // });
+    // FR.readAsDataURL(person.profilePhoto);
+    console.log();
+
+    // if (imageBuffer) {
+    documentContent.unshift(
+      new Paragraph({
+        children: [
+          new ImageRun({
+            data: buffer,
+            transformation: {
+              width: 100,
+              height: 100,
+            },
+          }),
+        ],
+      })
+    );
+    // }
+    // if (imageBuffer) {
+    // }
 
     documentContent.push(
       new Paragraph({
@@ -115,10 +145,13 @@ function Template2({ person }) {
             bold: true,
             size: 28,
           }),
-          ...person.listExp2.map(exp => new TextRun({
-            text: `\n\n${exp.positionExp2} at ${exp.experience2}, ${exp.adressEntreprise2} (${exp.dateDebut2} - ${exp.dateFin2})\n${exp.descriptionExp2}`,
-            size: 24,
-          })),
+          ...person.listExp2.map(
+            (exp) =>
+              new TextRun({
+                text: `\n\n${exp.positionExp2} at ${exp.experience2}, ${exp.adressEntreprise2} (${exp.dateDebut2} - ${exp.dateFin2})\n${exp.descriptionExp2}`,
+                size: 24,
+              })
+          ),
         ],
       }),
       new Paragraph({
@@ -128,10 +161,13 @@ function Template2({ person }) {
             bold: true,
             size: 28,
           }),
-          ...person.listEdu2.map(edu => new TextRun({
-            text: `\n\n${edu.diplomeFormation2} at ${edu.institutionFormation2}, ${edu.adressFormation2} (${edu.graduationDateFormation2})`,
-            size: 24,
-          })),
+          ...person.listEdu2.map(
+            (edu) =>
+              new TextRun({
+                text: `\n\n${edu.diplomeFormation2} at ${edu.institutionFormation2}, ${edu.adressFormation2} (${edu.graduationDateFormation2})`,
+                size: 24,
+              })
+          ),
         ],
       }),
       new Paragraph({
@@ -249,7 +285,7 @@ function Template2({ person }) {
         variant="primary"
         disabled={isLoading}
         onClick={!isLoading ? generatePDF2 : null}
-        style={{ marginTop: "20px", marginRight: "20px", }}
+        style={{ marginTop: "20px", marginRight: "20px" }}
       >
         {isLoading ? "Loading…" : "Download PDF"}
       </Button>
@@ -258,7 +294,7 @@ function Template2({ person }) {
         variant="primary"
         disabled={isLoading}
         onClick={!isLoading ? generateWord2 : null}
-        style={{ marginTop: "20px", marginLeft: "20px", }}
+        style={{ marginTop: "20px", marginLeft: "20px" }}
       >
         {isLoading ? "Loading…" : "Download Word"}
       </Button>
