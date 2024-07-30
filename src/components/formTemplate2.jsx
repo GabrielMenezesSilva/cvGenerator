@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-function formTemplate2({ person, setPerson }) {
+function FormTemplate2({ person, setPerson }) {
 
   const [listExp2, setListExp2] = useState([]);
+  const [listEdu2, setListEdu2] = useState([]);
+  const [profilePhoto, setProfilePhoto] = useState(null);
 
+  // Adiciona uma nova experiência à lista
   function ajoutExp2(e) {
     e.preventDefault();
     const exp = {
@@ -12,9 +15,9 @@ function formTemplate2({ person, setPerson }) {
       dateDebut2: person.dateDebut2,
       dateFin2: person.dateFin2,
       positionExp2: person.positionExp2,
-      description2: person.descriptionExp2,
+      description2: person.description2,
     };
-    setListExp2((prevList2) => [...prevList2, exp]);
+    setListExp2((prevList) => [...prevList, exp]);
     setPerson({
       ...person,
       experience2: "",
@@ -22,11 +25,11 @@ function formTemplate2({ person, setPerson }) {
       dateDebut2: "",
       dateFin2: "",
       positionExp2: "",
-      descriptionExp2: "",
+      description2: "",
     });
   }
 
-  const [listEdu2, setListEdu2] = useState([]);
+  // Adiciona uma nova formação à lista
   function ajoutForm2(e) {
     e.preventDefault();
     const form = {
@@ -35,7 +38,6 @@ function formTemplate2({ person, setPerson }) {
       graduationDateFormation2: person.graduationDateFormation2,
       diplomeFormation2: person.diplomeFormation2,
     };
-
     setListEdu2((prevList) => [...prevList, form]);
     setPerson({
       ...person,
@@ -46,29 +48,36 @@ function formTemplate2({ person, setPerson }) {
     });
   }
 
+  // Atualiza o estado 'person' com a lista de experiências sempre que 'listExp2' muda
   useEffect(() => {
     setPerson({ ...person, listExp2: listExp2 });
   }, [listExp2]);
 
+  // Atualiza o estado 'person' com a lista de formações sempre que 'listEdu2' muda
   useEffect(() => {
     setPerson({ ...person, listEdu2: listEdu2 });
   }, [listEdu2]);
 
-  const [profilePhoto, setProfilePhoto] = useState(null);
-
+  // Manipula a mudança na foto de perfil
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
-    setPerson({ ...person, profilePhoto: file });
+    if (file && file.type === "image/jpeg") {
+      setProfilePhoto(file);
+      setPerson({ ...person, profilePhoto: file });
+    } else {
+      alert("Please upload a JPEG image.");
+    }
   };
+
+  const today = new Date().toISOString().split('T')[0]; // Data atual no formato YYYY-MM-DD
 
   return (
     <div>
       <form id="cv-form">
-        {/**---------------------------------- ABOUT ME----------------------------------*/}
+        {/**---------------------------------- ABOUT ME ----------------------------------*/}
+        <h2>À propos de moi</h2>
 
-        <h2>ABOUT ME</h2>
-
-        <label forhtml="photo">Profile Photo:</label>
+        <label htmlFor="photo">Photo de Profil :</label>
         <input
           type="file"
           id="photo"
@@ -76,215 +85,243 @@ function formTemplate2({ person, setPerson }) {
           accept="image/jpeg"
           onChange={handlePhotoChange}
         />
-
         <br />
-        <label htmlFor="name">Name:</label>
+
+        <label htmlFor="name">Nom :</label>
         <input
           type="text"
           id="name"
           name="name"
           value={person.name2}
-          onChange={(e) => {
-            setPerson({ ...person, name2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, name2: e.target.value })}
+          maxLength="50"
+          placeholder="Entrez votre nom" // Placeholder em francês
         />
         <br />
-        <label htmlFor="adress">Adress:</label>
+
+        <label htmlFor="adress">Adresse :</label>
         <input
           type="text"
           id="adress"
           name="adress"
           value={person.adress2}
-          onChange={(e) => {
-            setPerson({ ...person, adress2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, adress2: e.target.value })}
+          maxLength="100"
+          placeholder="Entrez votre adresse" // Placeholder em francês
         />
         <br />
-        <label htmlFor="phone">Phone:</label>
+
+        <label htmlFor="phone">Téléphone :</label>
         <input
           type="tel"
           id="phone"
           name="phone"
           value={person.phone2}
           onChange={(e) => {
-            setPerson({ ...person, phone2: e.target.value });
+            const value = e.target.value;
+            if (/^\d{0,10}$/.test(value)) { // Permite apenas até 10 dígitos
+              setPerson({ ...person, phone2: value });
+            }
           }}
+          placeholder="Téléphone avec jusqu'à 10 chiffres" // Placeholder em francês
         />
         <br />
-        <label htmlFor="email">Email:</label>
+
+        <label htmlFor="email">Email :</label>
         <input
           type="email"
           id="email"
           name="email"
           value={person.email2}
-          onChange={(e) => {
-            setPerson({ ...person, email2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, email2: e.target.value })}
+          required
+          placeholder="Entrez votre email" // Placeholder em francês
         />
         <br />
-        <label htmlFor="position">Position:</label>
+
+        <label htmlFor="position">Poste :</label>
         <input
           type="text"
           id="position"
           name="position"
           value={person.position2}
-          onChange={(e) => {
-            setPerson({ ...person, position2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, position2: e.target.value })}
+          maxLength="100"
+          placeholder="Entrez le poste souhaité" // Placeholder em francês
         />
         <br />
-        <label htmlFor="description">Description:</label>
+
+        <label htmlFor="description">Description :</label>
         <input
           type="text"
           id="description"
           name="description"
           value={person.description2}
-          onChange={(e) => {
-            setPerson({ ...person, description2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, description2: e.target.value })}
+          maxLength="250"
+          placeholder="Entrez une brève description" // Placeholder em francês
         />
-        {/**---------------------------------- EXPERIENCE ----------------------------------*/}
         <br />
-        <h2>Expérience</h2>
-        {/**---------------------------------- EXPERIENCE 1 ----------------------------------*/}
 
-        <label htmlFor="experience">Poste occupé:</label>
+        {/**---------------------------------- EXPERIENCE ----------------------------------*/}
+        <h2>Expériences</h2>
+
+        <label htmlFor="positionExp">Poste :</label>
         <input
           type="text"
-          id="experience"
-          name="experience"
+          id="positionExp"
+          name="positionExp"
           value={person.positionExp2}
-          onChange={(e) => {
-            setPerson({ ...person, positionExp2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, positionExp2: e.target.value })}
+          maxLength="100"
+          placeholder="Entrez le poste" // Placeholder em francês
         />
         <br />
-        <label htmlFor="experience">Entreprise:</label>
+
+        <label htmlFor="experience">Entreprise :</label>
         <input
           type="text"
           id="experience"
           name="experience"
           value={person.experience2}
-          onChange={(e) => {
-            setPerson({ ...person, experience2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, experience2: e.target.value })}
+          maxLength="100"
+          placeholder="Entrez le nom de l'entreprise" // Placeholder em francês
         />
         <br />
-        <label htmlFor="experience">Adress Entreprise:</label>
+
+        <label htmlFor="adressEntreprise">Adresse de l'entreprise :</label>
         <input
           type="text"
-          id="experience"
-          name="experience"
+          id="adressEntreprise"
+          name="adressEntreprise"
           value={person.adressEntreprise2}
-          onChange={(e) => {
-            setPerson({ ...person, adressEntreprise2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, adressEntreprise2: e.target.value })}
+          maxLength="150"
+          placeholder="Entrez l'adresse de l'entreprise" // Placeholder em francês
         />
         <br />
-        <label htmlFor="experience">Date de début:</label>
+
+        <label htmlFor="dateDebut">Date de début :</label>
         <input
           type="date"
-          id="experience"
-          name="experience"
+          id="dateDebut"
+          name="dateDebut"
           value={person.dateDebut2}
-          onChange={(e) => {
-            setPerson({ ...person, dateDebut2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, dateDebut2: e.target.value })}
+          max={today} // Limita a data para não ser futura
         />
         <br />
-        <label htmlFor="experience">Date de fin:</label>
+
+        <label htmlFor="dateFin">Date de fin :</label>
         <input
           type="date"
-          id="experience"
-          name="experience"
+          id="dateFin"
+          name="dateFin"
           value={person.dateFin2}
           onChange={(e) => {
-            setPerson({ ...person, dateFin2: e.target.value });
+            const endDate = e.target.value;
+            if (endDate >= person.dateDebut2) { // Garante que a data de fim não seja anterior à data de início
+              setPerson({ ...person, dateFin2: endDate });
+            }
           }}
+          min={person.dateDebut2} // Data mínima baseada na data de início
         />
         <br />
-        <label htmlFor="experience">Description du Travail:</label>
-        <input
-          type="text"
-          id="experience"
-          name="experience"
-          value={person.descriptionExp2}
-          onChange={(e) => {
-            setPerson({ ...person, descriptionExp2: e.target.value });
-          }}
-        />
-        <br />
-        <button onClick={ajoutExp2}>Ajouter plus experiences</button>
-        <br />
-        {/*-----------------------------EDUCATION-------------------------- */}
 
-        <h2>Formation</h2>
-        <label htmlFor="institution">Institution:</label>
+        <label htmlFor="descriptionExp">Description du poste :</label>
         <input
           type="text"
-          id="institution"
-          name="institution"
+          id="descriptionExp"
+          name="descriptionExp"
+          value={person.descriptionExp2}
+          onChange={(e) => setPerson({ ...person, descriptionExp2: e.target.value })}
+          maxLength="250"
+          placeholder="Entrez une description du poste" // Placeholder em francês
+        />
+        <br />
+
+        <button onClick={ajoutExp2}>Ajouter plus d'expériences</button>
+        <br />
+
+        {/**----------------------------- EDUCATION ----------------------------- */}
+
+        <h2>Éducation</h2>
+
+        <label htmlFor="institutionFormation">Institution :</label>
+        <input
+          type="text"
+          id="institutionFormation"
+          name="institutionFormation"
           value={person.institutionFormation2}
-          onChange={(e) => {
-            setPerson({ ...person, institutionFormation2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, institutionFormation2: e.target.value })}
+          maxLength="100"
+          placeholder="Entrez l'institution" // Placeholder em francês
         />
         <br />
-        <label htmlFor="degree">Adress:</label>
+
+        <label htmlFor="adressFormation">Adresse :</label>
         <input
           type="text"
-          id="degree"
-          name="degree"
+          id="adressFormation"
+          name="adressFormation"
           value={person.adressFormation2}
-          onChange={(e) => {
-            setPerson({ ...person, adressFormation2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, adressFormation2: e.target.value })}
+          maxLength="150"
+          placeholder="Entrez l'adresse" // Placeholder em francês
         />
         <br />
-        <label htmlFor="graduation-date">Graduation Date:</label>
+
+        <label htmlFor="graduationDate">Date de diplomation :</label>
         <input
           type="date"
-          id="graduation-date"
-          name="graduation-date"
+          id="graduationDate"
+          name="graduationDate"
           value={person.graduationDateFormation2}
-          onChange={(e) => {
-            setPerson({ ...person, graduationDateFormation2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, graduationDateFormation2: e.target.value })}
+          max={today} // Limita a data para não ser futura
         />
         <br />
-        <label htmlFor="relevant-courses">Diplome:</label>
+
+        <label htmlFor="diplomeFormation">Diplôme :</label>
         <input
           type="text"
-          id="relevant-courses"
-          name="relevant-courses"
+          id="diplomeFormation"
+          name="diplomeFormation"
           value={person.diplomeFormation2}
-          onChange={(e) => {
-            setPerson({ ...person, diplomeFormation2: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, diplomeFormation2: e.target.value })}
+          maxLength="100"
+          placeholder="Entrez le diplôme" // Placeholder em francês
         />
-        <button onClick={ajoutForm2}>Ajouter plus Formations</button>
         <br />
-        {/*-----------------------------FIM EDUCATION-------------------------- */}
-        <h2>Skills</h2>
-        <label htmlFor="technical-skills">Technical Skills:</label>
+
+        <button onClick={ajoutForm2}>Ajouter plus de formations</button>
+        <br />
+
+        {/**----------------------------- END EDUCATION ----------------------------- */}
+
+        <h2>Compétences</h2>
+
+        <label htmlFor="technicalSkills">Compétences techniques :</label>
         <textarea
-          id="technical-skills"
-          name="technical-skills"
+          id="technicalSkills"
+          name="technicalSkills"
           value={person.technicalSkills2}
-          onChange={(e) => {
-            setPerson({ ...person, technicalSkills2: e.target.value });
-          }}
-        ></textarea>
+          onChange={(e) => setPerson({ ...person, technicalSkills2: e.target.value })}
+          maxLength="500"
+          placeholder="Décrivez vos compétences techniques" // Placeholder em francês
+        />
         <br />
-        <label htmlFor="language-skills">Language Skills:</label>
+
+        <label htmlFor="languageSkills">Compétences linguistiques :</label>
         <textarea
-          id="language-skills"
-          name="language-skills"
+          id="languageSkills"
+          name="languageSkills"
           value={person.languageSkills2}
-          onChange={(e) => {
-            setPerson({ ...person, languageSkills2: e.target.value });
-          }}
-        ></textarea>
+          onChange={(e) => setPerson({ ...person, languageSkills2: e.target.value })}
+          maxLength="500"
+          placeholder="Décrivez vos compétences linguistiques" // Placeholder em francês
+        />
         <br />
 
       </form>
@@ -292,4 +329,4 @@ function formTemplate2({ person, setPerson }) {
   );
 }
 
-export default formTemplate2;
+export default FormTemplate2;

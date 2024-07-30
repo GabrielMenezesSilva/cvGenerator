@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import jsPDF from "jspdf";
-import * as fs from "fs";
 import { Document, Packer, Paragraph, TextRun, ImageRun } from "docx";
 import { saveAs } from "file-saver";
+import { format } from 'date-fns';
+
+// Função para formatar datas
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return format(date, 'dd/MM/yyyy'); // ou qualquer outro formato que desejar
+};
 
 function Template2({ person }) {
   const contentRef2 = useRef();
@@ -93,46 +99,19 @@ function Template2({ person }) {
 
     // let imageBuffer = null;
     // // if (profilePhoto) {
-    // // }
-    // const FR = new FileReader();
-    // FR.addEventListener("load", async function (evt) {
-    //   imageBuffer = evt.target.result.split("base64,")[1];
-    //   console.log(imageBuffer);
-
-    //   documentContent.unshift(
-    //     new Paragraph({
-    //       children: [
-    //         new ImageRun({
-    //           data: Buffer.from(imageBuffer, "base64"),
-    //           transformation: {
-    //             width: 100,
-    //             height: 100,
-    //           },
-    //         }),
-    //       ],
-    //     })
-    //   );
-
-    //   const blob = await Packer.toBlob(doc);
-    //   saveAs(blob, "document.docx");
-    // });
-    // FR.readAsDataURL(person.profilePhoto);
-    console.log();
-
-    // if (imageBuffer) {
-    documentContent.unshift(
-      new Paragraph({
-        children: [
-          new ImageRun({
+      documentContent.unshift(
+        new Paragraph({
+          children: [
+            new ImageRun({
             data: buffer,
-            transformation: {
-              width: 100,
-              height: 100,
-            },
-          }),
-        ],
-      })
-    );
+              transformation: {
+                width: 100,
+                height: 100,
+              },
+            }),
+          ],
+        })
+      );
     // }
     // if (imageBuffer) {
     // }
@@ -148,7 +127,7 @@ function Template2({ person }) {
           ...person.listExp2.map(
             (exp) =>
               new TextRun({
-                text: `\n\n${exp.positionExp2} at ${exp.experience2}, ${exp.adressEntreprise2} (${exp.dateDebut2} - ${exp.dateFin2})\n${exp.descriptionExp2}`,
+                text: `\n\n${exp.positionExp2} at ${exp.experience2}, ${exp.adressEntreprise2} (${formatDate(exp.dateDebut2)} - ${formatDate(exp.dateFin2)})\n${exp.descriptionExp2}`,
                 size: 24,
               })
           ),
@@ -164,7 +143,7 @@ function Template2({ person }) {
           ...person.listEdu2.map(
             (edu) =>
               new TextRun({
-                text: `\n\n${edu.diplomeFormation2} at ${edu.institutionFormation2}, ${edu.adressFormation2} (${edu.graduationDateFormation2})`,
+                text: `\n\n${edu.diplomeFormation2} at ${edu.institutionFormation2}, ${edu.adressFormation2} (${formatDate(edu.graduationDateFormation2)})`,
                 size: 24,
               })
           ),
@@ -223,7 +202,7 @@ function Template2({ person }) {
                   ? URL.createObjectURL(person.profilePhoto)
                   : ""
               }
-              alt="Photo de Profil"
+              alt="Photo de Perfil"
             />
           </div>
           <div className="template2-contact-info">
@@ -242,8 +221,7 @@ function Template2({ person }) {
             <div key={index} className="template2-job">
               <h4>{exp.positionExp2}</h4>
               <p>
-                {exp.experience2}, {exp.adressEntreprise2}, {exp.dateDebut2} -{" "}
-                {exp.dateFin2}
+                {exp.experience2}, {exp.adressEntreprise2}, {formatDate(exp.dateDebut2)} - {formatDate(exp.dateFin2)}
               </p>
               <p>{exp.descriptionExp2}</p>
             </div>
@@ -256,7 +234,7 @@ function Template2({ person }) {
               <h3>{edu.diplomeFormation2}</h3>
               <p>
                 {edu.institutionFormation2}, {edu.adressFormation2},{" "}
-                {edu.graduationDateFormation2}{" "}
+                {formatDate(edu.graduationDateFormation2)}
               </p>
             </div>
           ))}
@@ -270,7 +248,7 @@ function Template2({ person }) {
               </div>
               <div className="right"></div>
             </div>
-          </div>{" "}
+          </div>
         </section>
         <div className="section">
           <div className="section__title">

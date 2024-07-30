@@ -3,10 +3,16 @@ import Button from "react-bootstrap/Button";
 import jsPDF from "jspdf";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 import { saveAs } from "file-saver";
+import { format } from 'date-fns';
 
-function template1({ person }) {
+// Função para formatar datas
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return format(date, 'dd/MM/yyyy'); // ou qualquer outro formato que desejar
+};
+
+function Template1({ person }) {
   const contentRef = useRef();
-
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -93,12 +99,11 @@ function template1({ person }) {
                   bold: true,
                   size: 28,
                 }),
-                ...person.listExp.map(
-                  (exp) =>
-                    new TextRun({
-                      text: `\n\n${exp.experience} at ${exp.adressEntreprise} (${exp.dateDebut} - ${exp.dateFin})\n${exp.position}\n${exp.description}`,
-                      size: 24,
-                    })
+                ...person.listExp.map((exp) =>
+                  new TextRun({
+                    text: `\n\n${exp.experience} at ${exp.adressEntreprise} (${formatDate(exp.dateDebut)} - ${formatDate(exp.dateFin)})\n${exp.position}\n${exp.description}`,
+                    size: 24,
+                  })
                 ),
               ],
             }),
@@ -109,12 +114,11 @@ function template1({ person }) {
                   bold: true,
                   size: 28,
                 }),
-                ...person.listEdu.map(
-                  (edu) =>
-                    new TextRun({
-                      text: `\n\n${edu.institutionFormation} at ${edu.adressFormation} (${edu.graduationDateFormation})\n${edu.diplomeFormation}`,
-                      size: 24,
-                    })
+                ...person.listEdu.map((edu) =>
+                  new TextRun({
+                    text: `\n\n${edu.institutionFormation} at ${edu.adressFormation} (${formatDate(edu.graduationDateFormation)})\n${edu.diplomeFormation}`,
+                    size: 24,
+                  })
                 ),
               ],
             }),
@@ -178,31 +182,26 @@ function template1({ person }) {
         <div className="details">
           <div className="section">
             <div className="section__title">Experience</div>
-            {person.listExp?.map(
-              (
-                exp,
-                index // Mapeia a lista de experiências e as exibe
-              ) => (
-                <div key={index} className="section__list">
-                  <div className="section__list-item">
-                    <div className="left">
-                      <div className="name">{exp.experience}</div>
-                      <div className="addr">{exp.adressEntreprise}</div>
-                      <div className="duration">
-                        {exp.dateDebut}-{exp.dateFin}
-                      </div>
+            {person.listExp?.map((exp, index) => (
+              <div key={index} className="section__list">
+                <div className="section__list-item">
+                  <div className="left">
+                    <div className="name">{exp.experience}</div>
+                    <div className="addr">{exp.adressEntreprise}</div>
+                    <div className="duration">
+                      {formatDate(exp.dateDebut)}  -  {formatDate(exp.dateFin)}
                     </div>
-                    <div className="right">
-                      <div className="name">{exp.position}</div>
-                      <div className="desc">{exp.description}</div>
-                      <br />
-                    </div>
+                  </div>
+                  <div className="right">
+                    <div className="name">{exp.position}</div>
+                    <div className="desc">{exp.description}</div>
                     <br />
                   </div>
                   <br />
                 </div>
-              )
-            )}
+                <br />
+              </div>
+            ))}
             <br />
           </div>
           {/*----------------------- fim da exp -----------------*/}
@@ -217,7 +216,7 @@ function template1({ person }) {
                     <div className="name">{edu.institutionFormation}</div>
                     <div className="addr">{edu.adressFormation}</div>
                     <div className="duration">
-                      {edu.graduationDateFormation}
+                      {formatDate(edu.graduationDateFormation)}
                     </div>
                   </div>
                   <div className="right">
@@ -272,4 +271,4 @@ function template1({ person }) {
   );
 }
 
-export default template1;
+export default Template1;

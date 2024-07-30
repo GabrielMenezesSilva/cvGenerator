@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-function formComponent({ person, setPerson }) {
-  // Define o componente funcional formComponent que recebe 'person' e 'setPerson' como props
-  const [listExp, setListExp] = useState([]); // define que  listExp vai receber um Array de exp
+function FormComponent({ person, setPerson }) {
+  // Estado para armazenar as experiências e formações
+  const [listExp, setListExp] = useState([]);
+  const [listEdu, setListEdu] = useState([]);
 
+  // Função para adicionar uma nova experiência à lista de experiências
   function ajoutExp(e) {
-    // adicionar uma nova experiência no array
     e.preventDefault();
     const exp = {
       experience: person.experience,
@@ -15,259 +15,291 @@ function formComponent({ person, setPerson }) {
       dateFin: person.dateFin,
       position: person.positionExp,
       description: person.descriptionExp,
-    }; // Atualiza a lista de experiências adicionando a nova experiência
+    };
     setListExp((prevList) => [...prevList, exp]);
-
-    setPerson({ // resetar os campos 
-      ...person,
-      experience: "",
-      adressEntreprise: "",
-      dateDebut: "",
-      dateFin: "",
-      positionExp: "",
-      descriptionExp: "",
+    setPerson({ 
+      ...person, 
+      experience: "", 
+      adressEntreprise: "", 
+      dateDebut: "", 
+      dateFin: "", 
+      positionExp: "", 
+      descriptionExp: "" 
     });
   }
-  const [listEdu, setListEdu] = useState([]); // Define o estado 'listEdu' para armazenar uma lista de formações
-  function ajoutForm(e) { // adicionar uma nova formação à lista
+
+  // Função para adicionar uma nova formação à lista de formações
+  function ajoutForm(e) {
     e.preventDefault();
     const form = {
       institutionFormation: person.institutionFormation,
       adressFormation: person.adressFormation,
       graduationDateFormation: person.graduationDateFormation,
       diplomeFormation: person.diplomeFormation,
-    }; // Atualiza a lista de formações adicionando a nova formação
-
+    };
     setListEdu((prevList) => [...prevList, form]);
-    setPerson({
-      ...person,
-      institutionFormation: "",
-      adressFormation: "",
-      graduationDateFormation: "",
-      diplomeFormation: "",
-    }); // Reseta os campos 
+    setPerson({ 
+      ...person, 
+      institutionFormation: "", 
+      adressFormation: "", 
+      graduationDateFormation: "", 
+      diplomeFormation: "" 
+    });
   }
-  useEffect(() => { // Atualiza a lista de formações no estado 'person' sempre que 'listEdu' mudar
+
+  // Atualiza o estado 'person' com a lista de formações quando 'listEdu' muda
+  useEffect(() => {
     setPerson({ ...person, listEdu: listEdu });
   }, [listEdu]);
 
-  
-  useEffect(() => { // Pareil mais pour les experiences
+  // Atualiza o estado 'person' com a lista de experiências quando 'listExp' muda
+  useEffect(() => {
     setPerson({ ...person, listExp: listExp });
   }, [listExp]);
 
   return (
     <div>
       <form id="cv-form">
-        {/**---------------------------------- ABOUT ME----------------------------------*/}
+        {/* Seção About Me */}
+        <h2>À propos de moi</h2>
 
-        <h2>About Me</h2>
-        <label htmlFor="name">Name:</label>
+        {/* Campo para o nome */}
+        <label htmlFor="name">Nom :</label>
         <input
           type="text"
           id="name"
           name="name"
           value={person.name}
-          onChange={(e) => {
-            setPerson({ ...person, name: e.target.value });
-          }}
-          placeholder="Seu nome"
+          onChange={(e) => setPerson({ ...person, name: e.target.value })}
+          placeholder="Votre nom"
+          maxLength="50" // Limita a 50 caracteres
         />
         <br />
-        <label htmlFor="email">Email:</label>
+
+        {/* Campo para o e-mail */}
+        <label htmlFor="email">Email :</label>
         <input
           type="email"
           id="email"
           name="email"
           value={person.email}
-          onChange={(e) => {
-            setPerson({ ...person, email: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, email: e.target.value })}
+          placeholder="Votre email"
+          required // Campo obrigatório
         />
         <br />
 
-        <br />
-        <label htmlFor="phone">Phone:</label>
+        {/* Campo para o telefone */}
+        <label htmlFor="phone">Téléphone :</label>
         <input
           type="tel"
           id="phone"
           name="phone"
           value={person.phone}
           onChange={(e) => {
-            setPerson({ ...person, phone: e.target.value });
+            const value = e.target.value;
+            if (/^\d*$/.test(value) && value.length <= 10) { // Limita a 10 dígitos
+              setPerson({ ...person, phone: value });
+            }
           }}
+          placeholder="Téléphone jusqu'à 10 chiffres"
         />
         <br />
-        <label htmlFor="position">Position:</label>
+
+        {/* Campo para a posição */}
+        <label htmlFor="position">Poste :</label>
         <input
           type="text"
           id="position"
           name="position"
           value={person.position}
-          onChange={(e) => {
-            setPerson({ ...person, position: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, position: e.target.value })}
+          placeholder="Votre poste"
+          maxLength="100" // Limita a 100 caracteres
         />
         <br />
-        <label htmlFor="description">Description:</label>
+
+        {/* Campo para a descrição */}
+        <label htmlFor="description">Description :</label>
         <input
           type="text"
           id="description"
           name="description"
           value={person.description}
-          onChange={(e) => {
-            setPerson({ ...person, description: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, description: e.target.value })}
+          placeholder="Description de vous-même"
+          maxLength="250" // Limita a 250 caracteres
         />
-        {/**---------------------------------- EXPERIENCE ----------------------------------*/}
         <br />
-        <h2>Expérience</h2>
-        {/**---------------------------------- EXPERIENCE 1 ----------------------------------*/}
 
-        <label htmlFor="experience">Entreprise:</label>
+        {/* Seção Experience */}
+        <h2>Expérience</h2>
+
+        {/* Campo para a experiência */}
+        <label htmlFor="experience">Entreprise :</label>
         <input
           type="text"
           id="experience"
           name="experience"
           value={person.experience}
-          onChange={(e) => {
-            setPerson({ ...person, experience: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, experience: e.target.value })}
+          placeholder="Nom de l'entreprise"
+          maxLength="100" // Limita a 100 caracteres
         />
         <br />
-        <label htmlFor="experience">Adress Entreprise:</label>
+
+        {/* Campo para o endereço da empresa */}
+        <label htmlFor="adressEntreprise">Adresse de l'entreprise :</label>
         <input
           type="text"
-          id="experience"
-          name="experience"
+          id="adressEntreprise"
+          name="adressEntreprise"
           value={person.adressEntreprise}
-          onChange={(e) => {
-            setPerson({ ...person, adressEntreprise: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, adressEntreprise: e.target.value })}
+          placeholder="Adresse de l'entreprise"
+          maxLength="150" // Limita a 150 caracteres
         />
         <br />
-        <label htmlFor="experience">Date de début:</label>
+
+        {/* Campo para a data de início */}
+        <label htmlFor="dateDebut">Date de début :</label>
         <input
           type="date"
-          id="experience"
-          name="experience"
+          id="dateDebut"
+          name="dateDebut"
           value={person.dateDebut}
-          onChange={(e) => {
-            setPerson({ ...person, dateDebut: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, dateDebut: e.target.value })}
+          max={new Date().toISOString().split('T')[0]} // Limitar até a data atual
         />
         <br />
-        <label htmlFor="experience">Date de fin:</label>
+
+        {/* Campo para a data de término */}
+        <label htmlFor="dateFin">Date de fin :</label>
         <input
           type="date"
-          id="experience"
-          name="experience"
+          id="dateFin"
+          name="dateFin"
           value={person.dateFin}
-          onChange={(e) => {
-            setPerson({ ...person, dateFin: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, dateFin: e.target.value })}
         />
         <br />
-        <label htmlFor="experience">Poste occupé:</label>
+
+        {/* Campo para o cargo ocupado */}
+        <label htmlFor="positionExp">Poste occupé :</label>
         <input
           type="text"
-          id="experience"
-          name="experience"
+          id="positionExp"
+          name="positionExp"
           value={person.positionExp}
-          onChange={(e) => {
-            setPerson({ ...person, positionExp: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, positionExp: e.target.value })}
+          placeholder="Poste occupé"
+          maxLength="100" // Limita a 100 caracteres
         />
         <br />
-        <label htmlFor="experience">Description du Travail:</label>
+
+        {/* Campo para a descrição do trabalho */}
+        <label htmlFor="descriptionExp">Description du travail :</label>
         <input
           type="text"
-          id="experience"
-          name="experience"
+          id="descriptionExp"
+          name="descriptionExp"
           value={person.descriptionExp}
-          onChange={(e) => {
-            setPerson({ ...person, descriptionExp: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, descriptionExp: e.target.value })}
+          placeholder="Description du travail"
+          maxLength="250" // Limita a 250 caracteres
         />
         <br />
-        <button onClick={ajoutExp}>Ajouter plus experiences</button>
 
-        {/*-----------------------------EDUCATION-------------------------- */}
+        {/* Botão para adicionar mais experiências */}
+        <button onClick={ajoutExp}>Ajouter plus d'expériences</button>
+        <br />
 
+        {/* Seção Formation */}
         <h2>Formation</h2>
-        <label htmlFor="institution">Institution:</label>
+
+        {/* Campo para a instituição */}
+        <label htmlFor="institutionFormation">Institution :</label>
         <input
           type="text"
-          id="institution"
-          name="institution"
+          id="institutionFormation"
+          name="institutionFormation"
           value={person.institutionFormation}
-          onChange={(e) => {
-            setPerson({ ...person, institutionFormation: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, institutionFormation: e.target.value })}
+          placeholder="Nom de l'institution"
+          maxLength="100" // Limita a 100 caracteres
         />
         <br />
-        <label htmlFor="degree">Adress:</label>
+
+        {/* Campo para o endereço da formação */}
+        <label htmlFor="adressFormation">Adresse :</label>
         <input
           type="text"
-          id="degree"
-          name="degree"
+          id="adressFormation"
+          name="adressFormation"
           value={person.adressFormation}
-          onChange={(e) => {
-            setPerson({ ...person, adressFormation: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, adressFormation: e.target.value })}
+          placeholder="Adresse de la formation"
+          maxLength="150" // Limita a 150 caracteres
         />
         <br />
-        <label htmlFor="graduation-date">Graduation Date:</label>
+
+        {/* Campo para a data de graduação */}
+        <label htmlFor="graduationDateFormation">Date de graduation :</label>
         <input
           type="date"
-          id="graduation-date"
-          name="graduation-date"
+          id="graduationDateFormation"
+          name="graduationDateFormation"
           value={person.graduationDateFormation}
-          onChange={(e) => {
-            setPerson({ ...person, graduationDateFormation: e.target.value });
-          }}
+          onChange={(e) => setPerson({ ...person, graduationDateFormation: e.target.value })}
         />
-        <br />
-        <label htmlFor="relevant-courses">Diplome:</label>
-        <input
-          type="text"
-          id="relevant-courses"
-          name="relevant-courses"
-          value={person.diplomeFormation}
-          onChange={(e) => {
-            setPerson({ ...person, diplomeFormation: e.target.value });
-          }}
-        />
-        <br />
-        <button onClick={ajoutForm}>Ajouter plus Formations</button>
-        <br />
-        {/*-----------------------------FIM EDUCATION-------------------------- */}
-        <h2>Skills</h2>
-        <label htmlFor="technical-skills">Technical Skills:</label>
-        <textarea
-          id="technical-skills"
-          name="technical-skills"
-          value={person.technicalSkills}
-          onChange={(e) => {
-            setPerson({ ...person, technicalSkills: e.target.value });
-          }}
-        ></textarea>
         <br />
 
+        {/* Campo para o diploma */}
+        <label htmlFor="diplomeFormation">Diplôme :</label>
+        <input
+          type="text"
+          id="diplomeFormation"
+          name="diplomeFormation"
+          value={person.diplomeFormation}
+          onChange={(e) => setPerson({ ...person, diplomeFormation: e.target.value })}
+          placeholder="Diplôme obtenu"
+          maxLength="100" // Limita a 100 caracteres
+        />
         <br />
-        <label htmlFor="language-skills">Language Skills:</label>
+
+        {/* Botão para adicionar mais formações */}
+        <button onClick={ajoutForm}>Ajouter plus de formations</button>
+        <br />
+
+        {/* Seção Skills */}
+        <h2>Compétences</h2>
+
+        {/* Campo para habilidades técnicas */}
+        <label htmlFor="technicalSkills">Compétences techniques :</label>
         <textarea
-          id="language-skills"
-          name="language-skills"
+          id="technicalSkills"
+          name="technicalSkills"
+          value={person.technicalSkills}
+          onChange={(e) => setPerson({ ...person, technicalSkills: e.target.value })}
+          placeholder="Listez vos compétences techniques"
+          maxLength="500" // Limita a 500 caracteres
+        />
+        <br />
+
+        {/* Campo para habilidades linguísticas */}
+        <label htmlFor="languageSkills">Compétences linguistiques :</label>
+        <textarea
+          id="languageSkills"
+          name="languageSkills"
           value={person.languageSkills}
-          onChange={(e) => {
-            setPerson({ ...person, languageSkills: e.target.value });
-          }}
-        ></textarea>
+          onChange={(e) => setPerson({ ...person, languageSkills: e.target.value })}
+          placeholder="Listez vos compétences linguistiques"
+          maxLength="500" // Limita a 500 caracteres
+        />
         <br />
       </form>
     </div>
   );
 }
 
-export default formComponent;
+export default FormComponent;
